@@ -1,19 +1,23 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <application
-        android:label="oficial_app"
-        android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
-        <!-- Google Maps API Key -->
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyDNK1at1qodN4gWmr7q80AGOMbNVTtJ6W4"/>
-
-        <!-- Internet Permission -->
+    <!-- Internet Permission -->
         <uses-permission android:name="android.permission.INTERNET"/>
 
         <!-- Location Permissions -->
         <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
         <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    
+    
+    
+    <application
+        android:label="oficial_app"
+        android:name="${applicationName}"
+        android:icon="@drawable/app_icon">
+        <!-- Google Maps API Key -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyASf9ADotGHqT9tDAemzZDPCZiAPxfi0yE"/>
+
+        
         <activity
             android:name=".MainActivity"
             android:exported="true"

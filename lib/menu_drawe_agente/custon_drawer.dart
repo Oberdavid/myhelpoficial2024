@@ -52,7 +52,7 @@ class CustomDrawer extends StatelessWidget {
             leading: const Icon(Icons.exit_to_app),
             title: const Text('Cerrar Sesión'),
             onTap: () {
-              context.go('/cerrarSesion');
+              context.go('/login');
             },
           ),
         ],
