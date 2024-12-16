@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:async';
 import 'package:location/location.dart';
-import 'package:oficial_app/mensajes/mensajes.dart';
+import 'package:oficial_app/mensajes_screen/mensajes.dart';
 
 class SalaChatComunitario extends StatefulWidget {
   final double radio;

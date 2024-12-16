@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:go_router/go_router.dart';
-import 'package:oficial_app/menu_drawe_agente/custon_drawer.dart';
-import 'package:oficial_app/menu_drawe_agente/custon_drawer.dart'; // Importa el nuevo Drawer
+import 'package:oficial_app/drawe_agente_screen/custon_drawer.dart';
+// Importa el nuevo Drawer
 
 class AuthorityHomeScreen extends StatelessWidget {
   final List<String> imageList = [

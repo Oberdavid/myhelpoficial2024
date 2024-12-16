@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
-import 'package:oficial_app/Servicios_rapidos/detallesdesaparecidos.dart';
+import 'package:oficial_app/Servicios_rapidos_screen/detallesdesaparecidos.dart';
 
 void main() => runApp(MyApp());
 

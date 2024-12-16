@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:oficial_app/menu_inferior_user/feedback_screen.dart';
-import 'package:oficial_app/menu_inferior_user/location_screen.dart';
-import 'package:oficial_app/menu_inferior_user/notificatios_screen.dart';
-import 'package:oficial_app/user_pages_app/casa_screen.dart';
+import 'package:oficial_app/botton_navigator_bar/feedback_screen.dart';
+import 'package:oficial_app/botton_navigator_bar/location_screen.dart';
+import 'package:oficial_app/botton_navigator_bar/notificatios_screen.dart';
+import 'package:oficial_app/home_screen/casa_screen.dart';
 
 class MainScreen extends StatefulWidget {
   @override
