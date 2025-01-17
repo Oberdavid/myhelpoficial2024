@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
-class NotificationsScreen extends StatelessWidget {
-  const NotificationsScreen({super.key});
+class Notificaciones extends StatelessWidget {
+  const Notificaciones({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -23,13 +22,6 @@ class NotificationsScreen extends StatelessWidget {
               bottomLeft: Radius.circular(25),
               bottomRight: Radius.circular(25),
             )),
-            leading: IconButton(
-              onPressed: () {
-                context.go('/casascreen');
-              },
-              icon: const Icon(Icons.arrow_back),
-              color: Colors.white,
-            ),
           ),
         ),
       ),

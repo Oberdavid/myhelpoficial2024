@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
-import 'onboarding_screen.dart';
-import 'package:go_router/go_router.dart'; // Importa go_router
+import 'package:go_router/go_router.dart';
+import 'package:oficial_app/omboarding1.dart';
+import 'package:oficial_app/omboarding2.dart';
+import 'package:oficial_app/omboarding3.dart';
+import 'package:shared_preferences/shared_preferences.dart'; // Importa SharedPreferences
+import 'onboarding_screen.dart'; // Asegúrate de importar tu pantalla de onboarding
 
 class OnboardingFlow extends StatefulWidget {
   const OnboardingFlow({super.key});
@@ -12,22 +16,22 @@ class OnboardingFlow extends StatefulWidget {
 class _OnboardingFlowState extends State<OnboardingFlow> {
   final PageController _pageController = PageController();
   final List<Widget> _pages = [
-    const OnboardingScreen(
+    const OnboardingScreen1(
       imagePath: 'assets/family.jpg',
       title: 'Bienvenido a Myhelp',
       subtitle: 'Tu seguridad y tranquilidad son nuestra prioridad',
     ),
-    const OnboardingScreen(
+    const OnboardingScreen2(
       imagePath: 'assets/familia5.jpg',
       title: 'Funcionalidad',
       subtitle:
-          'Siempre habrá alguien cerca para ayudarnos,  ya nunca mas te sentiras sol@',
+          'Siempre habrá alguien cerca para ayudarnos, ya nunca más te sentirás sol@',
     ),
-    const OnboardingScreen(
+    const OnboardingScreen3(
       imagePath: 'assets/familiaunida.jpg',
       title: 'Comienza Ahora',
       subtitle:
-          'Desde ahora tendras el control de tu seguridad y la de los tuyos en la palma de tu mano gracias a Myhelp.',
+          'Desde ahora tendrás el control de tu seguridad y la de los tuyos en la palma de tu mano gracias a Myhelp.',
     ),
   ];
 
@@ -37,6 +41,13 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
     setState(() {
       _currentPage = index;
     });
+  }
+
+  // Método para guardar el estado del Onboarding
+  Future<void> _completeOnboarding() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool(
+        'showOnboarding', true); // Guarda que el Onboarding ya se mostró
   }
 
   @override
@@ -54,7 +65,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
             left: 20,
             child: TextButton(
               onPressed: () {
-                context.go('/entrada');
+                context.go('/entrada'); // Redirige a la pantalla de entrada
               },
               child: const Text('Skip'),
             ),
@@ -63,10 +74,15 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
             bottom: 20,
             right: 20,
             child: TextButton(
-              onPressed: () {
+              onPressed: () async {
                 if (_currentPage == _pages.length - 1) {
-                  context.go('/entrada');
+                  // Si es la última página, guarda el estado y redirige
+                  await _completeOnboarding();
+                  if (mounted) {
+                    context.go('/'); // Redirige a la pantalla principal
+                  }
                 } else {
+                  // Si no es la última página, avanza a la siguiente
                   _pageController.nextPage(
                     duration: const Duration(milliseconds: 300),
                     curve: Curves.easeIn,

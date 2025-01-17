@@ -71,7 +71,7 @@ class _NovedadesScreenState extends State<NovedadesScreen> {
         )),
         leading: IconButton(
           onPressed: () {
-            context.go('/casa');
+            context.go('/casascreen');
           },
           icon: const Icon(Icons.arrow_back),
           color: Colors.white,

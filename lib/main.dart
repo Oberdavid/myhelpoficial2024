@@ -1,46 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:oficial_app/Agentes_screen/ConsultarPlacaScreen.dart';
-import 'package:oficial_app/Agentes_screen/authority_home.dart';
-import 'package:oficial_app/Agentes_screen/consultar_imei.dart';
-import 'package:oficial_app/Agentes_screen/consultarcedulascreen.dart';
-import 'package:oficial_app/Agentes_screen/detalles_solicitados.dart';
-import 'package:oficial_app/Agentes_screen/detallesnovedadesscreen.dart';
-import 'package:oficial_app/Agentes_screen/novedadesrecibidas.dart';
-import 'package:oficial_app/Agentes_screen/personas_solicitadas.dart';
-import 'package:oficial_app/Agentes_screen/verificacion_comunitaria.dart';
-import 'package:oficial_app/servicios_rapidos_screen/desaparecidosscreen.dart';
-import 'package:oficial_app/Servicios_rapidos_screen/detallesdesaparecidos.dart';
-import 'package:oficial_app/Servicios_rapidos_screen/novedadesscreen.dart';
-import 'package:oficial_app/Servicios_rapidos_screen/reportar_desaparecidos_screen.dart';
-import 'package:oficial_app/drawer_user_screen/change_password_screen.dart';
-import 'package:oficial_app/drawer_user_screen/change_plan_screen.dart';
-import 'package:oficial_app/drawer_user_screen/como_funciona_laapp_screen.dart';
-import 'package:oficial_app/drawer_user_screen/contactanos_screen.dart';
-import 'package:oficial_app/drawer_user_screen/editar_peril_screen.dart';
-import 'package:oficial_app/drawer_user_screen/politicas_privacidad.dart';
-import 'package:oficial_app/drawer_user_screen/quienes_somos_screen.dart';
-import 'package:oficial_app/ingreso_screen/forgot_password_screen.dart';
-import 'package:oficial_app/ingreso_screen/login_screen.dart';
-import 'package:oficial_app/botton_navigator_bar/feedback_screen.dart';
-import 'package:oficial_app/botton_navigator_bar/location_screen.dart';
-import 'package:oficial_app/botton_navigator_bar/notificatios_screen.dart';
-import 'package:oficial_app/ingreso_screen/register_screen.dart';
-import 'package:oficial_app/ingreso_screen/entrada_screen.dart';
-import 'package:oficial_app/omboarding_screen/onboarding_flow.dart';
-import 'package:oficial_app/home_screen/casa_screen.dart';
-import 'package:oficial_app/drawer_user_screen/add_contact_screen.dart';
-import 'package:oficial_app/drawer_user_screen/safety_tips_screen.dart';
-import 'package:oficial_app/drawer_user_screen/my_team_screen.dart';
-import 'package:oficial_app/mensajes_screen/mensajes.dart';
+import 'package:shared_preferences/shared_preferences.dart'; // Importa SharedPreferences
+import 'package:oficial_app/B_Navigator/IndexedStackNavigation.dart';
+import 'package:oficial_app/desaparecidos.dart';
+import 'package:oficial_app/detalles_desaparecidos.dart';
+import 'package:oficial_app/novedades.dart';
+import 'package:oficial_app/reportar_desaparecidos.dart';
+import 'package:oficial_app/cambiar_contraseña.dart';
+import 'package:oficial_app/cambiar_plan.dart';
+import 'package:oficial_app/como_funciona.dart';
+import 'package:oficial_app/contactanos.dart';
+import 'package:oficial_app/editar_peril.dart';
+import 'package:oficial_app/politicas_privacidad.dart';
+import 'package:oficial_app/quienes_somos.dart';
+import 'package:oficial_app/olvidar_contraseña.dart';
+import 'package:oficial_app/login.dart';
+import 'package:oficial_app/register_screen.dart';
+import 'package:oficial_app/entrada_screen.dart';
+import 'package:oficial_app/onboarding_flow.dart';
+import 'package:oficial_app/agregar_contactos.dart';
+import 'package:oficial_app/consejos_seguridad.dart';
+import 'package:oficial_app/mi_dispositivo.dart';
+import 'package:oficial_app/Device/shake.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding
+      .ensureInitialized(); // Necesario para usar SharedPreferences
+  final prefs = await SharedPreferences.getInstance();
+  final bool? showOnboarding = prefs.getBool('showOnboarding') ?? true;
+
+  runApp(MyApp(showOnboarding: showOnboarding));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool? showOnboarding;
+
+  const MyApp({super.key, required this.showOnboarding});
 
   @override
   Widget build(BuildContext context) {
@@ -53,30 +49,32 @@ class MyApp extends StatelessWidget {
           bodyLarge: GoogleFonts.poppins(fontSize: 16.0),
         ),
       ),
-      routerConfig: _router,
+      routerConfig: _router(showOnboarding),
     );
   }
-}
 
-final GoRouter _router = GoRouter(
-  initialLocation: '/onboarding',
-  routes: [
-    ShellRoute(
-      builder: (context, state, child) {
-        return MyHomePage(child: child);
-      },
+  GoRouter _router(bool? showOnboarding) {
+    return GoRouter(
+      initialLocation: showOnboarding == null
+          ? '/onboarding'
+          : '/login', // Ruta inicial dinámica
       routes: [
         GoRoute(
-          path: '/onboarding',
-          builder: (context, state) => const OnboardingFlow(),
-        ),
-        GoRoute(
-          path: '/entrada',
-          builder: (context, state) => const EntradaScreen(),
+          path: '/',
+          builder: (context, state) =>
+              const IndexedStackNavigation(), // Pantalla principal
         ),
         GoRoute(
           path: '/login',
           builder: (context, state) => const LoginScreen(),
+        ),
+        GoRoute(
+          path: '/onboarding',
+          builder: (context, state) => const OnboardingFlow(), // Onboarding
+        ),
+        GoRoute(
+          path: '/entrada',
+          builder: (context, state) => const EntradaScreen(),
         ),
         GoRoute(
           path: '/registerscreen',
@@ -87,149 +85,59 @@ final GoRouter _router = GoRouter(
           builder: (context, state) => const ForgotPasswordScreen(),
         ),
         GoRoute(
-          path: '/casascreen',
-          builder: (context, state) => const CasaScreen(),
-        ),
-        GoRoute(
-          path: '/changepasswordscreen',
+          path: '/cambiarcontrasena',
           builder: (context, state) => const ChangePasswordScreen(),
         ),
         GoRoute(
-          path: '/editarperfilscreen',
+          path: '/editarperfil',
           builder: (context, state) => const EditarPerfilScreen(),
         ),
         GoRoute(
-          path: '/changeplanscreen',
+          path: '/cambiarplan',
           builder: (context, state) => const ChangePlanScreen(),
         ),
         GoRoute(
-          path: '/addContactscreen',
+          path: '/agregarcontactos',
           builder: (context, state) => const AddContactScreen(),
         ),
         GoRoute(
-          path: '/myteamscreen',
+          path: '/midispositivo',
           builder: (context, state) => const MyTeamScreen(),
         ),
         GoRoute(
-          path: '/notificatiosscreen',
-          builder: (context, state) => const NotificationsScreen(),
-        ),
-        GoRoute(
-          path: '/locationscreen',
-          builder: (context, state) => LocationScreen(),
-        ),
-        GoRoute(
-          path: '/feedbackscreen',
-          builder: (context, state) => const FeedbackScreen(),
-        ),
-        GoRoute(
-          path: '/novedadesscreen',
+          path: '/novedades',
           builder: (context, state) => NovedadesScreen(),
         ),
         GoRoute(
-          path: '/desaparecidosscreen',
+          path: '/desaparecidos',
           builder: (context, state) => DesaparecidosScreen(),
         ),
         GoRoute(
-          path: '/reportardesaparecidoscreen',
+          path: '/reportardesaparecidos',
           builder: (context, state) => ReportarDesaparecidoScreen(),
         ),
         GoRoute(
-          path: '/quienessomosscreen',
+          path: '/quienessomos',
           builder: (context, state) => QuienesSomosScreen(),
         ),
         GoRoute(
-          path: '/comofuncionalaappscreen',
+          path: '/comofunciona',
           builder: (context, state) => ComoFuncionaAppScreen(),
         ),
         GoRoute(
-          path: '/contactanosscreen',
+          path: '/contactanos',
           builder: (context, state) => ContactanosScreen(),
         ),
         GoRoute(
-          path: '/privacypolicyscreen',
+          path: '/politicasprivacidad',
           builder: (context, state) => const PrivacyPolicyScreen(),
         ),
         GoRoute(
-          path: '/safetytipsscreen',
+          path: '/consejosseguridad',
           builder: (context, state) => SafetyTipsScreen(),
-        ),
-        GoRoute(
-          path: '/consultarplacascreen',
-          builder: (context, state) => ConsultarPlacaScreen(),
-        ),
-        GoRoute(
-          path: '/personassolicitadas',
-          builder: (context, state) => WantedListScreen(),
-        ),
-        GoRoute(
-          path: '/VerificacionComunitariaScreen',
-          builder: (context, state) => const VerificacionComunitariaScreen(),
-        ),
-        GoRoute(
-          path: '/consultarcedulascreen',
-          builder: (context, state) => ConsultarCedulaScreen(),
-        ),
-        GoRoute(
-          path: '/consultarimei',
-          builder: (context, state) => ConsultarImeiScreen(),
-        ),
-        GoRoute(
-          path: '/detallessolicitados/:id',
-          builder: (context, state) {
-            final id = state.pathParameters['id']!;
-            return WantedDetailsScreen(id: id);
-          },
-        ),
-        GoRoute(
-          path: '/novedadesrecibidasscreen',
-          builder: (context, state) => NovedadesRecibidasScreen(),
-        ),
-        GoRoute(
-          path: '/detallesnovedadesscreen/:id/:latitude/:longitude',
-          builder: (context, state) {
-            final id = state.pathParameters['id']!;
-            final latitude = double.parse(state.pathParameters['latitude']!);
-            final longitude = double.parse(state.pathParameters['longitude']!);
-
-            return DetallesNovedadesScreen(
-              id: id,
-              latitude: latitude,
-              longitude: longitude,
-            );
-          },
-        ),
-        GoRoute(
-          path: '/authorityHome',
-          builder: (context, state) => AuthorityHomeScreen(),
-        ),
-        GoRoute(
-          path: '/details/:type/:index',
-          builder: (context, state) {
-            final type = state.pathParameters['type']!;
-            final index = int.parse(state.pathParameters['index']!);
-            return DetallesDesaparecidoScreen(type: type, index: index);
-          },
         ),
         // Agrega más rutas según sea necesario
       ],
-    ),
-  ],
-);
-
-class MyHomePage extends StatefulWidget {
-  final Widget child;
-  const MyHomePage({required this.child});
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: widget.child,
     );
   }
 }

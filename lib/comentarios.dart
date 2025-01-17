@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
-class FeedbackScreen extends StatefulWidget {
-  const FeedbackScreen({super.key});
+class Comentarios extends StatefulWidget {
+  const Comentarios({super.key});
 
   @override
-  _FeedbackScreenState createState() => _FeedbackScreenState();
+  _ComentariosState createState() => _ComentariosState();
 }
 
-class _FeedbackScreenState extends State<FeedbackScreen> {
+class _ComentariosState extends State<Comentarios> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _feedbackController = TextEditingController();
 
@@ -41,13 +40,6 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
               bottomLeft: Radius.circular(25),
               bottomRight: Radius.circular(25),
             )),
-            leading: IconButton(
-              onPressed: () {
-                context.go('/casascreen');
-              },
-              icon: const Icon(Icons.arrow_back),
-              color: Colors.white,
-            ),
           ),
         ),
       ),

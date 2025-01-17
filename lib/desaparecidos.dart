@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
-import 'package:oficial_app/Servicios_rapidos_screen/detallesdesaparecidos.dart';
+import 'package:oficial_app/detalles_desaparecidos.dart';
 
 void main() => runApp(MyApp());
 
@@ -92,7 +92,7 @@ class _DesaparecidosScreenState extends State<DesaparecidosScreen> {
         ),
         leading: IconButton(
           onPressed: () {
-            context.go('/casa');
+            context.go('/casascreen');
           },
           icon: const Icon(Icons.arrow_back),
           color: Colors.white,

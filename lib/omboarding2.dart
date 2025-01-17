@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class OnboardingScreen extends StatelessWidget {
+class OnboardingScreen2 extends StatelessWidget {
   final String imagePath;
   final String title;
   final String subtitle;
 
-  const OnboardingScreen(
+  const OnboardingScreen2(
       {required this.imagePath, required this.title, required this.subtitle});
 
   @override
@@ -17,8 +17,12 @@ class OnboardingScreen extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(
-                'assets/familiaunida.jpg'), // Asegúrate de tener tus imágenes en assets
+            SizedBox(
+              width: 200, // Ajusta el ancho según sea necesario
+              height: 100, // Ajusta la altura según sea necesario
+              child: Image.asset(
+                  'assets/familia5.jpg'), // Asegúrate de tener tus imágenes en assets
+            ),
             const SizedBox(height: 20),
             Text(
               title,

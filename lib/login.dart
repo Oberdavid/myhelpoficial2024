@@ -9,7 +9,6 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  String? _userType = 'usuario';
   String? _idType;
 
   @override
@@ -38,31 +37,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               const SizedBox(height: 32),
-              Column(
-                children: [
-                  RadioListTile<String>(
-                    title: const Text('Usuario'),
-                    value: 'usuario',
-                    groupValue: _userType,
-                    onChanged: (value) {
-                      setState(() {
-                        _userType = value;
-                      });
-                    },
-                  ),
-                  RadioListTile<String>(
-                    title: const Text('Agente'),
-                    value: 'agente',
-                    groupValue: _userType,
-                    onChanged: (value) {
-                      setState(() {
-                        _userType = value;
-                      });
-                    },
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
               DropdownButtonFormField<String>(
                 decoration: const InputDecoration(
                   labelText: 'Tipo de identificación',
@@ -114,11 +88,8 @@ class _LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 24),
               ElevatedButton(
                 onPressed: () {
-                  if (_userType == 'usuario') {
-                    context.go('/casascreen');
-                  } else if (_userType == 'agente') {
-                    context.go('/authorityHome');
-                  }
+                  // Redirige a la ruta principal (/) después de iniciar sesión
+                  context.go('/');
                 },
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 50),

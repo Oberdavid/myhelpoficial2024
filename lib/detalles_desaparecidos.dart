@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class WantedDetailsScreen extends StatelessWidget {
-  final String id;
+class DetallesDesaparecidoScreen extends StatelessWidget {
+  final String type;
+  final int index;
 
-  const WantedDetailsScreen({required this.id});
+  const DetallesDesaparecidoScreen({super.key, required this.type, required this.index});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Detalles del Solicitado',
+          'Detalles del Desaparecido',
           style: TextStyle(color: Colors.white, fontSize: 28),
         ),
         centerTitle: true,
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.blue,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
             bottomLeft: Radius.circular(25),
@@ -24,7 +25,7 @@ class WantedDetailsScreen extends StatelessWidget {
         ),
         leading: IconButton(
           onPressed: () {
-            context.go('/personassolicitadas');
+            context.go('/desaparecidos');
           },
           icon: const Icon(Icons.arrow_back),
           color: Colors.white,
@@ -36,13 +37,14 @@ class WantedDetailsScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Detalles del Solicitado $id',
+              'Detalles de $type $index',              
               style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),
-            // Aquí puedes agregar más información detallada sobre la persona solicitada
+            Image.asset('assets/${type}_$index.png', height: 200),
+            const SizedBox(height: 20),
             Text(
-              'Información detallada sobre la persona solicitada con ID $id...',
+              'Información detallada sobre $type $index...',
               style: const TextStyle(fontSize: 18),
             ),
           ],

@@ -1,15 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
-import 'package:go_router/go_router.dart';
 import 'package:share_plus/share_plus.dart';
 
-class LocationScreen extends StatefulWidget {
+
+
+
+
+
+class Ubicacion extends StatefulWidget {
+  const Ubicacion({super.key});
+
   @override
-  _LocationScreenState createState() => _LocationScreenState();
+  _ubicacionState createState() => _ubicacionState();
 }
 
-class _LocationScreenState extends State<LocationScreen> {
+class _ubicacionState extends State<Ubicacion> {
   final Location _location = Location();
   late GoogleMapController _mapController;
   LatLng _initialPosition = const LatLng(4.2977429, -74.8075868);
@@ -52,13 +59,6 @@ class _LocationScreenState extends State<LocationScreen> {
             bottomLeft: Radius.circular(25),
             bottomRight: Radius.circular(25),
           ),
-        ),
-        leading: IconButton(
-          onPressed: () {
-            context.go('/casascreen');
-          },
-          icon: const Icon(Icons.arrow_back),
-          color: Colors.white,
         ),
       ),
       body: Stack(

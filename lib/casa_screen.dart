@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:oficial_app/drawer_user_screen/navdrawer.dart';
+import 'package:oficial_app/navdrawer.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:oficial_app/Device/shake.dart'; // Importa la clase Shake
 
 class CasaScreen extends StatefulWidget {
   const CasaScreen({Key? key}) : super(key: key);
@@ -15,24 +16,158 @@ class CasaScreen extends StatefulWidget {
 class _CasaScreenState extends State<CasaScreen> {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
-
-  int _selectedIndex = 0;
+  late Shake _shake; // Instancia de Shake
 
   @override
   void initState() {
     super.initState();
     _initializeNotifications();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _selectedIndex = _calculateSelectedIndex(context);
+    _initializeShake(); // Inicializa el detector de shake
+  }
+
+  void _initializeShake() {
+    _shake = Shake();
+    _shake.startListening(() async {
+      _shake.pauseListening(); // Pausa la detección temporalmente
+      await _showEmergencyDialog(context); // Muestra el diálogo de emergencia
+      _shake.resumeListening(); // Reanuda la detección de movimiento
     });
   }
 
   Future<void> _initializeNotifications() async {
     const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings("@mipmap/ic_laucher");
+        AndroidInitializationSettings("@mipmap/ic_launcher");
     const InitializationSettings initializationSettings =
         InitializationSettings(android: initializationSettingsAndroid);
     await flutterLocalNotificationsPlugin.initialize(initializationSettings);
+  }
+
+  Future<void> _showEmergencyDialog(BuildContext context) async {
+    return await showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Container(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'Presiona el botón',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 20),
+              Image.asset(
+                  'assets/ayuda.png'), // Asegúrate de tener la imagen en tu carpeta assets
+              const SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context); // Cierra el diálogo
+                    },
+                    child: const Text('Cancelar'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context); // Cierra el diálogo
+                      _showMoreOptions(context); // Muestra más opciones
+                    },
+                    child: const Text('Más opciones'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<void> _showConfirmationDialog(
+      BuildContext context, String title) async {
+    return await showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Confirmar solicitud'),
+        content:
+            Text('¿Estás seguro de que deseas enviar la solicitud de $title?'),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context); // Cierra el diálogo sin enviar
+            },
+            child: const Text('Cancelar'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context); // Cierra el diálogo
+              _sendEmergencyRequest(title); // Envía la solicitud
+            },
+            child: const Text('Enviar'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _sendEmergencyRequest(String title) async {
+    // Lógica para enviar la solicitud de emergencia
+    print("Solicitud de $title enviada");
+
+    // Mostrar una notificación al usuario
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Solicitud de $title enviada correctamente.'),
+      ),
+    );
+
+    // También puedes enviar una notificación local
+    await _showNotification(title);
+  }
+
+  void _showMoreOptions(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (context) => Container(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: Icon(Icons.local_hospital),
+              title: Text('Llamar a una ambulancia'),
+              onTap: () {
+                Navigator.pop(context);
+                _sendEmergencyRequest('ambulancia');
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.fire_truck),
+              title: Text('Llamar a los bomberos'),
+              onTap: () {
+                Navigator.pop(context);
+                _sendEmergencyRequest('bomberos');
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.security),
+              title: Text('Llamar a seguridad privada'),
+              onTap: () {
+                Navigator.pop(context);
+                _sendEmergencyRequest('seguridad privada');
+              },
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Future<void> _showNotification(String title) async {
@@ -47,56 +182,25 @@ class _CasaScreenState extends State<CasaScreen> {
         NotificationDetails(android: androidPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin.show(
       0,
-      'Acción realizada',
-      'Has seleccionado: $title',
+      'Solicitud enviada',
+      'Has enviado una solicitud de $title',
       platformChannelSpecifics,
     );
   }
 
   void _handleOptionTap(BuildContext context, String title, String route) {
     if (route.isNotEmpty) {
-      GoRouter.of(context).push(route);
+      GoRouter.of(context).push(route); // Navega a la ruta correspondiente
     } else {
-      _showConfirmationDialog(context, title);
+      _showConfirmationDialog(
+          context, title); // Muestra el diálogo de confirmación
     }
   }
 
-  void _showConfirmationDialog(BuildContext context, String title) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Enviar notificación'),
-          content: const Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text('Usa este servicio solo en caso de emergencia'),
-              SizedBox(height: 10),
-              Text(
-                  'Se enviará una notificación para que vengan en tu ayuda. ¿Estás seguro/a?'),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Cancelar'),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                _showNotification(title);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Notificación enviada.'),
-                  ),
-                );
-              },
-              child: const Text('Enviar'),
-            ),
-          ],
-        );
-      },
-    );
+  @override
+  void dispose() {
+    _shake.pauseListening(); // Detén la detección al salir de la pantalla
+    super.dispose();
   }
 
   @override
@@ -287,90 +391,7 @@ class _CasaScreenState extends State<CasaScreen> {
           ],
         ),
       ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(30),
-            topRight: Radius.circular(30),
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.2),
-              spreadRadius: 2,
-              blurRadius: 10,
-              offset: Offset(0, -5),
-            ),
-          ],
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(30),
-            topRight: Radius.circular(30),
-          ),
-          child: BottomNavigationBar(
-            items: const <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                icon: Icon(Icons.home, size: 30),
-                label: 'Casa',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.notifications, size: 30),
-                label: 'Notificaciones',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.location_on, size: 30),
-                label: 'Ubicación',
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.feedback, size: 30),
-                label: 'Comentarios',
-              ),
-            ],
-            currentIndex: _selectedIndex,
-            selectedItemColor: Colors.blue,
-            unselectedItemColor: Colors.grey,
-            onTap: _onItemTapped,
-            showSelectedLabels: true,
-            showUnselectedLabels: true,
-            type: BottomNavigationBarType.fixed,
-          ),
-        ),
-      ),
     );
-  }
-
-  static int _calculateSelectedIndex(BuildContext context) {
-    final String location = GoRouterState.of(context).uri.toString();
-    if (location.startsWith('/notificatios')) {
-      return 1;
-    }
-    if (location.startsWith('/location')) {
-      return 2;
-    }
-    if (location.startsWith('/Feedback')) {
-      return 3;
-    }
-    return 0;
-  }
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-    switch (index) {
-      case 0:
-        GoRouter.of(context).go('/casascreen');
-        break;
-      case 1:
-        GoRouter.of(context).go('/notificatiosscreen');
-        break;
-      case 2:
-        GoRouter.of(context).go('/locationscreen');
-        break;
-      case 3:
-        GoRouter.of(context).go('/Feedbackscreen');
-        break;
-    }
   }
 
   Widget _buildOptionCard(
