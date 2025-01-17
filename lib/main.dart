@@ -3,25 +3,25 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // Importa SharedPreferences
 import 'package:oficial_app/B_Navigator/IndexedStackNavigation.dart';
-import 'package:oficial_app/desaparecidos.dart';
-import 'package:oficial_app/detalles_desaparecidos.dart';
-import 'package:oficial_app/novedades.dart';
-import 'package:oficial_app/reportar_desaparecidos.dart';
-import 'package:oficial_app/cambiar_contraseña.dart';
-import 'package:oficial_app/cambiar_plan.dart';
-import 'package:oficial_app/como_funciona.dart';
-import 'package:oficial_app/contactanos.dart';
-import 'package:oficial_app/editar_peril.dart';
-import 'package:oficial_app/politicas_privacidad.dart';
-import 'package:oficial_app/quienes_somos.dart';
-import 'package:oficial_app/olvidar_contraseña.dart';
-import 'package:oficial_app/login.dart';
-import 'package:oficial_app/register_screen.dart';
-import 'package:oficial_app/entrada_screen.dart';
-import 'package:oficial_app/onboarding_flow.dart';
-import 'package:oficial_app/agregar_contactos.dart';
-import 'package:oficial_app/consejos_seguridad.dart';
-import 'package:oficial_app/mi_dispositivo.dart';
+import 'package:oficial_app/Screen/desaparecidos.dart';
+import 'package:oficial_app/Screen/detalles_desaparecidos.dart';
+import 'package:oficial_app/Screen/novedades.dart';
+import 'package:oficial_app/Screen/reportar_desaparecidos.dart';
+import 'package:oficial_app/Screen/cambiar_contraseña.dart';
+import 'package:oficial_app/Screen/cambiar_plan.dart';
+import 'package:oficial_app/Screen/como_funciona.dart';
+import 'package:oficial_app/Screen/contactanos.dart';
+import 'package:oficial_app/Screen/editar_peril.dart';
+import 'package:oficial_app/Screen/politicas_privacidad.dart';
+import 'package:oficial_app/Screen/quienes_somos.dart';
+import 'package:oficial_app/Login/olvidar_contraseña.dart';
+import 'package:oficial_app/Login/login.dart';
+import 'package:oficial_app/Login/register_screen.dart';
+import 'package:oficial_app/Screen/entrada_screen.dart';
+import 'package:oficial_app/Omboarding/onboarding_flow.dart';
+import 'package:oficial_app/Screen/agregar_contactos.dart';
+import 'package:oficial_app/Screen/consejos_seguridad.dart';
+import 'package:oficial_app/Screen/mi_dispositivo.dart';
 import 'package:oficial_app/Device/shake.dart';
 
 void main() async {
@@ -62,7 +62,7 @@ class MyApp extends StatelessWidget {
         GoRoute(
           path: '/',
           builder: (context, state) =>
-              const IndexedStackNavigation(), // Pantalla principal
+              const IndexedStackNavigation(), // Pantalla principa
         ),
         GoRoute(
           path: '/login',
