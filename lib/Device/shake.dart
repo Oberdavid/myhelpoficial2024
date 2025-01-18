@@ -18,11 +18,11 @@ class Shake {
 
   PhoneShakeCallback? _onShake;
 
-  final double _shakeThresholdGravity = 1.5;
+  final double _shakeThresholdGravity = 2.7 * 1.8;
   // Mínimo de sacudidas necesarias dentro del tiempo permitido
   final int _minimumShakeCount = 2;
   // Tiempo mínimo entre sacudidas
-  final int _shakeSlopTimeMS = 2000;
+  final int _shakeSlopTimeMS = 1000;
 
   int _mShakeTimestamp = DateTime.now().millisecondsSinceEpoch;
 
