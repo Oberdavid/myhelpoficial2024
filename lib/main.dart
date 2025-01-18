@@ -28,7 +28,7 @@ void main() async {
   WidgetsFlutterBinding
       .ensureInitialized(); // Necesario para usar SharedPreferences
   final prefs = await SharedPreferences.getInstance();
-  final bool? showOnboarding = prefs.getBool('showOnboarding') ?? true;
+  final bool? showOnboarding = prefs.getBool('showOnboarding');
 
   runApp(MyApp(showOnboarding: showOnboarding));
 }
@@ -55,9 +55,9 @@ class MyApp extends StatelessWidget {
 
   GoRouter _router(bool? showOnboarding) {
     return GoRouter(
-      initialLocation: showOnboarding == null
-          ? '/onboarding'
-          : '/login', // Ruta inicial dinámica
+      initialLocation: showOnboarding == true
+          ? '/entrada' // Ruta inicial dinámica
+          : '/onboarding',
       routes: [
         GoRoute(
           path: '/',
