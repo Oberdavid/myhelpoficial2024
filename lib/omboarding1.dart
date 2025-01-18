@@ -7,7 +7,10 @@ class OnboardingScreen1 extends StatelessWidget {
   final String subtitle;
 
   const OnboardingScreen1(
-      {required this.imagePath, required this.title, required this.subtitle});
+      {super.key,
+      required this.imagePath,
+      required this.title,
+      required this.subtitle});
 
   @override
   Widget build(BuildContext context) {
