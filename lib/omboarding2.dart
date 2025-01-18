@@ -20,8 +20,7 @@ class OnboardingScreen2 extends StatelessWidget {
             SizedBox(
               width: 200, // Ajusta el ancho según sea necesario
               height: 100, // Ajusta la altura según sea necesario
-              child: Image.asset(
-                  'assets/familia5.jpg'), // Asegúrate de tener tus imágenes en assets
+              child: Image.asset(imagePath),
             ),
             const SizedBox(height: 20),
             Text(

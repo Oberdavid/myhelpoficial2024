@@ -17,8 +17,7 @@ class OnboardingScreen3 extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(
-                'assets/familiaunida.jpg'), // Asegúrate de tener tus imágenes en assets
+            Image.asset(imagePath), // Asegúrate de tener tus imágenes en assets
             const SizedBox(height: 20),
             Text(
               title,
