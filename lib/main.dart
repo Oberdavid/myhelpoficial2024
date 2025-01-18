@@ -4,7 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // Importa SharedPreferences
 import 'package:oficial_app/B_Navigator/IndexedStackNavigation.dart';
 import 'package:oficial_app/desaparecidos.dart';
-import 'package:oficial_app/detalles_desaparecidos.dart';
 import 'package:oficial_app/novedades.dart';
 import 'package:oficial_app/reportar_desaparecidos.dart';
 import 'package:oficial_app/cambiar_contraseña.dart';
@@ -22,7 +21,6 @@ import 'package:oficial_app/onboarding_flow.dart';
 import 'package:oficial_app/agregar_contactos.dart';
 import 'package:oficial_app/consejos_seguridad.dart';
 import 'package:oficial_app/mi_dispositivo.dart';
-import 'package:oficial_app/Device/shake.dart';
 
 void main() async {
   WidgetsFlutterBinding
