@@ -7,7 +7,11 @@ class OnboardingScreen2 extends StatelessWidget {
   final String subtitle;
 
   const OnboardingScreen2(
-      {required this.imagePath, required this.title, required this.subtitle});
+      {super.key,
+      required this.imagePath,
+      required this.title,
+      required this.subtitle});
+
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +24,7 @@ class OnboardingScreen2 extends StatelessWidget {
             SizedBox(
               width: 200, // Ajusta el ancho según sea necesario
               height: 100, // Ajusta la altura según sea necesario
-              child: Image.asset(
-                  'assets/familia5.jpg'), // Asegúrate de tener tus imágenes en assets
+              child: Image.asset(imagePath),// Asegúrate de tener tus imágenes en assets
             ),
             const SizedBox(height: 20),
             Text(

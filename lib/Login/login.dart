@@ -20,12 +20,10 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(
-                child: Image.asset(
-                  'assets/logo.jpg',
-                  height: 80,
-                  width: 80,
-                ),
+              Image.asset(
+                'assets/logo.jpg',
+                height: 80,
+                width: 80,
               ),
               const SizedBox(height: 24),
               const Text(
@@ -76,7 +74,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 8),
               Align(
-                alignment: Alignment.centerRight,
+                alignment: Alignment.center,
                 child: TextButton(
                   onPressed: () {
                     context.go('/forgotpasswordscreen');
@@ -89,7 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ElevatedButton(
                 onPressed: () {
                   // Redirige a la ruta principal (/) después de iniciar sesión
-                  context.go('/');
+                  context.go('/casascreen');
                 },
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 50),
@@ -101,7 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
               ),
               const SizedBox(height: 16),
-              Row(
+              Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   const Text('¿Aún no tienes una cuenta?',

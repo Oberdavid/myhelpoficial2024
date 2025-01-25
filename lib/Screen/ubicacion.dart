@@ -1,13 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:share_plus/share_plus.dart';
-
-
-
-
-
 
 class Ubicacion extends StatefulWidget {
   const Ubicacion({super.key});
@@ -21,6 +15,7 @@ class _ubicacionState extends State<Ubicacion> {
   late GoogleMapController _mapController;
   LatLng _initialPosition = const LatLng(4.2977429, -74.8075868);
   LatLng _currentPosition = const LatLng(4.2977429, -74.8075868);
+  Set<Marker> _markers = {}; // Conjunto de marcadores
 
   void _onMapCreated(GoogleMapController controller) {
     _mapController = controller;
@@ -32,6 +27,14 @@ class _ubicacionState extends State<Ubicacion> {
     setState(() {
       _currentPosition =
           LatLng(locationData.latitude!, locationData.longitude!);
+      // Actualiza el marcador con la nueva posición
+      _markers = {
+        Marker(
+          markerId: const MarkerId('current_location'),
+          position: _currentPosition,
+          infoWindow: const InfoWindow(title: 'Estás aquí'),
+        ),
+      };
     });
     _mapController.animateCamera(
       CameraUpdate.newLatLng(_currentPosition),
@@ -69,24 +72,47 @@ class _ubicacionState extends State<Ubicacion> {
               target: _initialPosition,
               zoom: 15,
             ),
-            myLocationEnabled: true,
+            myLocationEnabled: true, // Muestra el botón de "mi ubicación"
+            markers: _markers, // Agrega los marcadores al mapa
           ),
           Positioned(
             bottom: 50,
-            right: 10,
-            child: FloatingActionButton(
-              onPressed: _getCurrentLocation,
-              tooltip: 'Obtener Ubicación Actual',
-              child: const Icon(Icons.my_location),
+            left: 10,
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: _getCurrentLocation,
+                borderRadius: BorderRadius.circular(30),
+                child: Ink(
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  width: 56,
+                  height: 56,
+                  child: const Icon(Icons.my_location, color: Colors.white),
+                ),
+              ),
             ),
           ),
           Positioned(
             bottom: 120,
-            right: 10,
-            child: FloatingActionButton(
-              onPressed: _shareLocation,
-              tooltip: 'Compartir Ubicación',
-              child: const Icon(Icons.share),
+            left: 10,
+            child: Material(
+              color: Colors.transparent,
+              child: InkWell(
+                onTap: _shareLocation,
+                borderRadius: BorderRadius.circular(30),
+                child: Ink(
+                  decoration: BoxDecoration(
+                    color: Colors.green,
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                  width: 56,
+                  height: 56,
+                  child: const Icon(Icons.share, color: Colors.white),
+                ),
+              ),
             ),
           ),
         ],

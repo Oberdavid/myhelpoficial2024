@@ -5,7 +5,7 @@ import 'package:oficial_app/Screen/notificaciones.dart';
 import 'package:oficial_app/Screen/ubicacion.dart';
 
 class IndexedStackNavigation extends StatefulWidget {
-  const IndexedStackNavigation({super.key});
+  const IndexedStackNavigation({super.key, required Widget child});
 
   @override
   State<IndexedStackNavigation> createState() => _IndexedStackNavigationState();

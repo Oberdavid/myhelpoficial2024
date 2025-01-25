@@ -1,10 +1,14 @@
-import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:go_router/go_router.dart'; // Importa GoRouter
 import 'package:oficial_app/Screen/navdrawer.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:oficial_app/Device/shake.dart'; // Importa la clase Shake
+import 'package:oficial_app/Device/shake.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:speech_to_text/speech_to_text.dart' as stt;
+import 'package:geolocator/geolocator.dart';
+import 'dart:async';
 
 class CasaScreen extends StatefulWidget {
   const CasaScreen({Key? key}) : super(key: key);
@@ -16,21 +20,23 @@ class CasaScreen extends StatefulWidget {
 class _CasaScreenState extends State<CasaScreen> {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
-  late Shake _shake; // Instancia de Shake
+  late Shake _shake;
+  final stt.SpeechToText _speech = stt.SpeechToText();
+  bool _isEmergencyModeActive = false;
 
   @override
   void initState() {
     super.initState();
     _initializeNotifications();
-    _initializeShake(); // Inicializa el detector de shake
+    _initializeShake();
   }
 
   void _initializeShake() {
     _shake = Shake();
     _shake.startListening(() async {
-      _shake.pauseListening(); // Pausa la detección temporalmente
-      await _showEmergencyDialog(context); // Muestra el diálogo de emergencia
-      _shake.resumeListening(); // Reanuda la detección de movimiento
+      _shake.pauseListening();
+      await _showEmergencyDialog(context);
+      _shake.resumeListening();
     });
   }
 
@@ -43,8 +49,18 @@ class _CasaScreenState extends State<CasaScreen> {
   }
 
   Future<void> _showEmergencyDialog(BuildContext context) async {
-    return await showDialog(
+    bool isDialogOpen = true;
+    Timer? autoCloseTimer;
+
+    autoCloseTimer = Timer(const Duration(seconds: 10), () {
+      if (isDialogOpen && Navigator.of(context, rootNavigator: true).canPop()) {
+        Navigator.of(context, rootNavigator: true).pop();
+      }
+    });
+
+    await showDialog(
       context: context,
+      barrierDismissible: false,
       builder: (context) => Dialog(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
@@ -55,26 +71,60 @@ class _CasaScreenState extends State<CasaScreen> {
             mainAxisSize: MainAxisSize.min,
             children: [
               const Text(
-                'Presiona el botón',
+                'Presiona el botón de pánico',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 20),
-              Image.asset(
-                  'assets/ayuda.png'), // Asegúrate de tener la imagen en tu carpeta assets
+              Image.asset('assets/ayuda.png'),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: () {
+                  isDialogOpen = false;
+                  autoCloseTimer?.cancel();
+                  setState(() {
+                    _isEmergencyModeActive = !_isEmergencyModeActive;
+                  });
+                  if (_isEmergencyModeActive) {
+                    _startListening();
+                  } else {
+                    _speech.stop();
+                  }
+                  Navigator.of(context, rootNavigator: true).pop();
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor:
+                      _isEmergencyModeActive ? Colors.green : Colors.red,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 30, vertical: 15),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: Text(
+                  _isEmergencyModeActive
+                      ? 'Emergencia Activada'
+                      : 'Activar Emergencia',
+                  style: const TextStyle(fontSize: 16, color: Colors.white),
+                ),
+              ),
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   TextButton(
                     onPressed: () {
-                      Navigator.pop(context); // Cierra el diálogo
+                      isDialogOpen = false;
+                      autoCloseTimer?.cancel();
+                      Navigator.of(context, rootNavigator: true).pop();
                     },
                     child: const Text('Cancelar'),
                   ),
                   TextButton(
                     onPressed: () {
-                      Navigator.pop(context); // Cierra el diálogo
-                      _showMoreOptions(context); // Muestra más opciones
+                      isDialogOpen = false;
+                      autoCloseTimer?.cancel();
+                      Navigator.of(context, rootNavigator: true).pop();
+                      _showMoreOptions(context);
                     },
                     child: const Text('Más opciones'),
                   ),
@@ -84,55 +134,55 @@ class _CasaScreenState extends State<CasaScreen> {
           ),
         ),
       ),
-    );
+    ).then((_) {
+      _shake.resumeListening();
+      isDialogOpen = false;
+      autoCloseTimer?.cancel();
+    });
   }
 
-  Future<void> _showConfirmationDialog(
-      BuildContext context, String title) async {
-    return await showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Confirmar solicitud'),
-        content:
-            Text('¿Estás seguro de que deseas enviar la solicitud de $title?'),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context); // Cierra el diálogo sin enviar
-            },
-            child: const Text('Cancelar'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context); // Cierra el diálogo
-              _sendEmergencyRequest(title); // Envía la solicitud
-            },
-            child: const Text('Enviar'),
-          ),
-        ],
-      ),
-    );
+  void _startListening() async {
+    bool available = await _speech.initialize();
+    if (available) {
+      _speech.listen(
+        onResult: (result) {
+          if (result.recognizedWords.contains("auxilio") ||
+              result.recognizedWords.contains("ayuda")) {
+            _sendAlert();
+          }
+        },
+      );
+    }
   }
 
-  void _sendEmergencyRequest(String title) async {
-    // Lógica para enviar la solicitud de emergencia
-    print("Solicitud de $title enviada");
+  Future<void> _sendAlert() async {
+    Position position = await Geolocator.getCurrentPosition();
+    String message =
+        "¡Necesito ayuda! Mi ubicación es: https://maps.google.com/?q=${position.latitude},${position.longitude}";
 
-    // Mostrar una notificación al usuario
+    await _makePhoneCall('123');
+    await _makePhoneCall('3017676159');
+    await _makePhoneCall('456');
+
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Solicitud de $title enviada correctamente.'),
-      ),
+      const SnackBar(
+          content: Text('Alerta enviada a las autoridades y familiares')),
     );
+  }
 
-    // También puedes enviar una notificación local
-    await _showNotification(title);
+  Future<void> _makePhoneCall(String phoneNumber) async {
+    final Uri phoneUri = Uri(scheme: 'tel', path: phoneNumber);
+    if (await canLaunch(phoneUri.toString())) {
+      await launch(phoneUri.toString());
+    } else {
+      throw 'No se pudo realizar la llamada a $phoneNumber';
+    }
   }
 
   void _showMoreOptions(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
       ),
       builder: (context) => Container(
@@ -141,27 +191,27 @@ class _CasaScreenState extends State<CasaScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
-              leading: Icon(Icons.local_hospital),
-              title: Text('Llamar a una ambulancia'),
+              leading: const Icon(Icons.local_hospital),
+              title: const Text('Llamar a una ambulancia'),
               onTap: () {
                 Navigator.pop(context);
-                _sendEmergencyRequest('ambulancia');
+                _makePhoneCall('123');
               },
             ),
             ListTile(
-              leading: Icon(Icons.fire_truck),
-              title: Text('Llamar a los bomberos'),
+              leading: const Icon(Icons.fire_truck),
+              title: const Text('Llamar a los bomberos'),
               onTap: () {
                 Navigator.pop(context);
-                _sendEmergencyRequest('bomberos');
+                _makePhoneCall('456');
               },
             ),
             ListTile(
-              leading: Icon(Icons.security),
-              title: Text('Llamar a seguridad privada'),
+              leading: const Icon(Icons.security),
+              title: const Text('Llamar a seguridad privada'),
               onTap: () {
                 Navigator.pop(context);
-                _sendEmergencyRequest('seguridad privada');
+                _makePhoneCall('3017676159');
               },
             ),
           ],
@@ -170,36 +220,10 @@ class _CasaScreenState extends State<CasaScreen> {
     );
   }
 
-  Future<void> _showNotification(String title) async {
-    const AndroidNotificationDetails androidPlatformChannelSpecifics =
-        AndroidNotificationDetails(
-      'your channel id',
-      'your channel name',
-      importance: Importance.max,
-      priority: Priority.high,
-    );
-    const NotificationDetails platformChannelSpecifics =
-        NotificationDetails(android: androidPlatformChannelSpecifics);
-    await flutterLocalNotificationsPlugin.show(
-      0,
-      'Solicitud enviada',
-      'Has enviado una solicitud de $title',
-      platformChannelSpecifics,
-    );
-  }
-
-  void _handleOptionTap(BuildContext context, String title, String route) {
-    if (route.isNotEmpty) {
-      GoRouter.of(context).push(route); // Navega a la ruta correspondiente
-    } else {
-      _showConfirmationDialog(
-          context, title); // Muestra el diálogo de confirmación
-    }
-  }
-
   @override
   void dispose() {
-    _shake.pauseListening(); // Detén la detección al salir de la pantalla
+    _shake.pauseListening();
+    _speech.stop();
     super.dispose();
   }
 
@@ -219,7 +243,12 @@ class _CasaScreenState extends State<CasaScreen> {
     ];
 
     return Scaffold(
-      drawer: NavDrawer(),
+      drawer: NavDrawer(
+        onEmergencyPressed: () {
+          Navigator.pop(context);
+          _showEmergencyDialog(context);
+        },
+      ),
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -235,7 +264,7 @@ class _CasaScreenState extends State<CasaScreen> {
           ),
         ),
         iconTheme: const IconThemeData(
-          color: Colors.blue, // Cambia el color del icono del Drawer aquí
+          color: Colors.blue,
         ),
         centerTitle: true,
         actions: [
@@ -379,9 +408,9 @@ class _CasaScreenState extends State<CasaScreen> {
                 _buildOptionCard(
                     context, 'Avisar a la policía', 'assets/policia.png', ''),
                 _buildOptionCard(context, 'Enviar Novedad',
-                    'assets/notificacion.png', '/novedadesscreen'),
+                    'assets/notificacion.png', '/Novedades'),
                 _buildOptionCard(context, 'Extraviados',
-                    'assets/desaparecido.png', '/desaparecidosscreen'),
+                    'assets/desaparecido.png', '/desaparecidos'),
                 _buildOptionCard(
                     context, 'Presencia Policial', 'assets/presencia.png', ''),
                 _buildOptionCard(
@@ -392,6 +421,43 @@ class _CasaScreenState extends State<CasaScreen> {
         ),
       ),
     );
+  }
+
+  void _handleOptionTap(BuildContext context, String title, String route) {
+    if (route.isNotEmpty) {
+      // Usa GoRouter para navegar
+      context.go(route);
+    } else {
+      // Muestra un diálogo de confirmación antes de enviar la alerta
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Confirmar acción'),
+          content: Text(
+              '¿Estás seguro de que deseas enviar una alerta de "$title"?'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Cierra el diálogo
+              },
+              child: const Text('Cancelar'),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Cierra el diálogo
+                _sendAlert(); // Envía la alerta
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Alerta de "$title" enviada exitosamente.'),
+                  ),
+                );
+              },
+              child: const Text('Enviar'),
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   Widget _buildOptionCard(

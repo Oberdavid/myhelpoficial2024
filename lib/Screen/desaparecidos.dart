@@ -2,48 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
-import 'package:oficial_app/Screen/detalles_desaparecidos.dart';
-
-void main() => runApp(MyApp());
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp.router(
-      routerConfig: _router,
-      debugShowCheckedModeBanner: false,
-    );
-  }
-}
-
-final GoRouter _router = GoRouter(
-  initialLocation: '/desaparecidosscreen',
-  routes: [
-    GoRoute(
-      path: '/desaparecidosscreen',
-      builder: (context, state) => DesaparecidosScreen(),
-    ),
-    GoRoute(
-      path: '/details/:type/:index',
-      builder: (context, state) {
-        final type = state.pathParameters['type']!;
-        final index = int.parse(state.pathParameters['index']!);
-        return DetallesDesaparecidoScreen(type: type, index: index);
-      },
-    ),
-    // Agrega más rutas según sea necesario
-  ],
-);
+import 'mapa_screen.dart';
+import 'reportar_extravios.dart';
 
 class DesaparecidosScreen extends StatefulWidget {
+  const DesaparecidosScreen({super.key});
+
   @override
   _DesaparecidosScreenState createState() => _DesaparecidosScreenState();
 }
 
 class _DesaparecidosScreenState extends State<DesaparecidosScreen> {
-  LatLng? _selectedLocation;
-  GoogleMapController? _mapController;
-  String _selectedCategory = '';
+  String _selectedCategory = 'Todos';
+  LatLng? _currentLocation;
 
   @override
   void initState() {
@@ -55,23 +26,11 @@ class _DesaparecidosScreenState extends State<DesaparecidosScreen> {
     final location = Location();
     final currentLocation = await location.getLocation();
     setState(() {
-      _selectedLocation =
-          LatLng(currentLocation.latitude!, currentLocation.longitude!);
+      _currentLocation = LatLng(
+        currentLocation.latitude!,
+        currentLocation.longitude!,
+      );
     });
-  }
-
-  void _goToReportar() {
-    context.go('/reportardesaparecidoscreen');
-  }
-
-  void _selectCategory(String category) {
-    setState(() {
-      _selectedCategory = category;
-    });
-  }
-
-  void _goToDetails(String type, int index) {
-    context.go('/details/$type/$index');
   }
 
   @override
@@ -91,133 +50,79 @@ class _DesaparecidosScreenState extends State<DesaparecidosScreen> {
           ),
         ),
         leading: IconButton(
-          onPressed: () {
-            context.go('/casascreen');
-          },
-          icon: const Icon(Icons.arrow_back),
-          color: Colors.white,
+          onPressed: () => context.go('/casascreen'),
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                _buildCategoryIcon(Icons.person, 'Personas'),
-                _buildCategoryIcon(Icons.directions_car, 'Vehículos'),
-                _buildCategoryIcon(Icons.pets, 'Mascotas'),
-                _buildCategoryIcon(Icons.description, 'Documentos'),
-              ],
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => context.go('/reportar'),
+        child: const Icon(Icons.add),
+      ),
+      body: Column(
+        children: [
+          _buildCategoryFilter(),
+          Expanded(
+            child: ListView.builder(
+              itemCount: 10,
+              itemBuilder: (context, index) => _buildReporteCard(index),
             ),
-            const SizedBox(height: 20),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCategoryFilter() {
+    final categorias = ['Todos', 'Personas', 'Vehículos', 'Mascotas', 'Documentos'];
+    return SizedBox(
+      height: 60,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: categorias.length,
+        itemBuilder: (context, index) => Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: ChoiceChip(
+            label: Text(categorias[index]),
+            selected: _selectedCategory == categorias[index],
+            onSelected: (selected) => setState(() {
+              _selectedCategory = selected ? categorias[index] : 'Todos';
+            }),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildReporteCard(int index) {
+    return GestureDetector(
+      onTap: () => context.go('/desaparecidos/detalles/$index'),
+      child: Card(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
             Expanded(
-              child: GridView.builder(
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 3 / 2,
-                ),
-                itemCount: 10, // Número de elementos a mostrar
-                itemBuilder: (context, index) {
-                  return _buildDesaparecidoCard(index);
-                },
+              child: Image.asset(
+                'assets/placeholder.jpg',
+                fit: BoxFit.cover,
               ),
             ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _goToReportar,
-              child: const Text('Reportar'),
+            const Padding(
+              padding: EdgeInsets.all(8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Título del reporte',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  Text('Categoría'),
+                  Text('Ubicación: 4.6097, -74.0817'),
+                ],
+              ),
             ),
           ],
         ),
       ),
     );
-  }
-
-  Widget _buildCategoryIcon(IconData icon, String title) {
-    return Expanded(
-      child: GestureDetector(
-        onTap: () => _selectCategory(title),
-        child: Card(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(icon, size: 50),
-              const SizedBox(height: 10),
-              Text(title),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDesaparecidoCard(int index) {
-    String type = '';
-
-    if (_selectedCategory == 'Personas') {
-      type = 'personas';
-      return GestureDetector(
-        onTap: () => _goToDetails(type, index),
-        child: Card(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset('assets/desaparecido_$index.png', height: 100),
-              const SizedBox(height: 10),
-              Text('Desaparecido $index'),
-            ],
-          ),
-        ),
-      );
-    } else if (_selectedCategory == 'Vehículos') {
-      type = 'vehiculos';
-      return GestureDetector(
-        onTap: () => _goToDetails(type, index),
-        child: Card(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset('assets/vehiculo_$index.png', height: 100),
-              const SizedBox(height: 10),
-              Text('Vehículo $index'),
-            ],
-          ),
-        ),
-      );
-    } else if (_selectedCategory == 'Mascotas') {
-      type = 'mascotas';
-      return GestureDetector(
-        onTap: () => _goToDetails(type, index),
-        child: Card(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset('assets/mascota_$index.png', height: 100),
-              const SizedBox(height: 10),
-              Text('Mascota $index'),
-            ],
-          ),
-        ),
-      );
-    } else if (_selectedCategory == 'Documentos') {
-      type = 'documentos';
-      return GestureDetector(
-        onTap: () => _goToDetails(type, index),
-        child: Card(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset('assets/documento_$index.png', height: 100),
-              const SizedBox(height: 10),
-              Text('Documento $index'),
-            ],
-          ),
-        ),
-      );
-    } else {
-      return Container(); // Si no hay una categoría seleccionada, muestra un contenedor vacío
-    }
   }
 }

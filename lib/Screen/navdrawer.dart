@@ -3,6 +3,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
 
 class NavDrawer extends StatefulWidget {
+  final VoidCallback onEmergencyPressed; // Callback para el botón de emergencia
+
+  const NavDrawer({super.key, required this.onEmergencyPressed});
+
   @override
   _NavDrawerState createState() => _NavDrawerState();
 }
@@ -58,27 +62,45 @@ class _NavDrawerState extends State<NavDrawer> {
                     ],
                   ),
                 ),
+                // Botón de emergencia (nuevo)
+                ListTile(
+                  leading: const Icon(Icons.warning, color: Colors.red),
+                  title: Text(
+                    'Modo de Emergencia',
+                    style: GoogleFonts.poppins(
+                      textStyle: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: Colors.red,
+                      ),
+                    ),
+                  ),
+                  onTap: () {
+                    widget
+                        .onEmergencyPressed(); // Llama al diálogo de emergencia
+                  },
+                ),
                 buildDrawerItem(Icons.home, 'Home', () {
-                  context.go('/casa');
+                  context.go('/casascreen');
                 }),
                 buildDrawerItem(Icons.edit, 'Editar Perfil', () {
-                  context.go('/EditarPerfilScreen');
+                  context.go('/editarPerfil');
                 }),
                 buildDrawerItem(Icons.lock, 'Cambiar Contraseña', () {
-                  context.go('/ChangePasswordScreen');
+                  context.go('/cambiarcontrasena');
                 }),
                 buildDrawerItem(Icons.swap_horizontal_circle, 'Cambiar Plan',
                     () {
-                  context.go('/ChangePlanScreen');
+                  context.go('/cambiarplan');
                 }),
                 buildDrawerItem(Icons.security, 'Consejos de Seguridad', () {
-                  context.go('/SafetyTipsScreen');
+                  context.go('/consejosdeseguridad');
                 }),
                 buildDrawerItem(Icons.person, 'Agregar Contactos', () {
-                  context.go('/AddContactScreen');
+                  context.go('/agregarcontactos');
                 }),
                 buildDrawerItem(Icons.phone, 'Mi Dispositivo', () {
-                  context.go('/MyTeamScreen');
+                  context.go('/midispositivo');
                 }),
                 ExpansionTile(
                   leading: const Icon(Icons.info, color: Colors.blue),
@@ -93,16 +115,16 @@ class _NavDrawerState extends State<NavDrawer> {
                   ),
                   children: [
                     buildDrawerSubItem('Quiénes Somos', () {
-                      context.go('/quienessomosscreen');
+                      context.go('/quienessomos');
                     }),
                     buildDrawerSubItem('Cómo Funciona la App', () {
-                      context.go('/comofuncionalaappscreen');
+                      context.go('/comofunciona');
                     }),
                     buildDrawerSubItem('Contáctanos', () {
-                      context.go('/contactanosscreen');
+                      context.go('/contactanos');
                     }),
                     buildDrawerSubItem('Políticas de Privacidad', () {
-                      context.go('/PrivacyPolicyScreen');
+                      context.go('/PrivacyPolicy');
                     }),
                   ],
                 ),
@@ -146,14 +168,4 @@ class _NavDrawerState extends State<NavDrawer> {
       onTap: onTap,
     );
   }
-}
-
-void main() {
-  runApp(MaterialApp(
-    home: Scaffold(
-      appBar: AppBar(title: const Text('Drawer Example')),
-      drawer: NavDrawer(),
-      body: const Center(child: Text('Main Content')),
-    ),
-  ));
 }

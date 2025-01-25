@@ -4,7 +4,7 @@ import 'package:oficial_app/Omboarding/omboarding1.dart';
 import 'package:oficial_app/Omboarding/omboarding2.dart';
 import 'package:oficial_app/Omboarding/omboarding3.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // Importa SharedPreferences
-import 'package:oficial_app/Omboarding/onboarding_screen.dart'; 
+
 // Asegúrate de importar tu pantalla de onboarding
 
 class OnboardingFlow extends StatefulWidget {
@@ -79,7 +79,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
                 if (_currentPage == _pages.length - 1) {
                   // Si es la última página, guarda el estado y redirige
                   await _completeOnboarding();
-                  if (mounted) {
+                  if (context.mounted) {
                     context.go('/'); // Redirige a la pantalla principal
                   }
                 } else {

@@ -7,7 +7,10 @@ class OnboardingScreen3 extends StatelessWidget {
   final String subtitle;
 
   const OnboardingScreen3(
-      {required this.imagePath, required this.title, required this.subtitle});
+      {super.key,
+      required this.imagePath,
+      required this.title,
+      required this.subtitle});
 
   @override
   Widget build(BuildContext context) {
@@ -17,8 +20,7 @@ class OnboardingScreen3 extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Image.asset(
-                'assets/familiaunida.jpg'), // Asegúrate de tener tus imágenes en assets
+            Image.asset(imagePath), // Asegúrate de tener tus imágenes en assets
             const SizedBox(height: 20),
             Text(
               title,

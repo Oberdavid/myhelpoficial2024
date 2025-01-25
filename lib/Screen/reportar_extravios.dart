@@ -12,14 +12,12 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class ReportarDesaparecidoScreen extends StatefulWidget {
+class ReportarExtravioScreen extends StatefulWidget {
   @override
-  _ReportarDesaparecidoScreenState createState() =>
-      _ReportarDesaparecidoScreenState();
+  _ReportarExtravioState createState() => _ReportarExtravioState();
 }
 
-class _ReportarDesaparecidoScreenState
-    extends State<ReportarDesaparecidoScreen> {
+class _ReportarExtravioState extends State<ReportarExtravioScreen> {
   String _selectedCategory = '';
   TextEditingController _descripcionController = TextEditingController();
   TextEditingController _fechaController = TextEditingController();
