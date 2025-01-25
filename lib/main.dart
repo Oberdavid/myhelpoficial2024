@@ -128,10 +128,10 @@ class MyApp extends StatelessWidget {
                 builder: (context, state) => reportar.ReportarExtravioScreen(),
               ),
               GoRoute(
-                path: 'detalles/:id',
+                path: 'details/:id',
                 builder: (context, state) => DetallesScreen(
                   reporteId: state.pathParameters['id']!,
-                  type: 'extravio', // Add appropriate type value
+                  type: 'default', // Add appropriate type value
                   index: 0, // Add appropriate index value
                 ),
               ),
@@ -160,7 +160,7 @@ class MyApp extends StatelessWidget {
             builder: (context, state) => const MyTeamScreen(),
           ),
           GoRoute(
-            path: '/Novedades',
+            path: '/novedades',
             builder: (context, state) => NovedadesScreen(),
           ),
           GoRoute(

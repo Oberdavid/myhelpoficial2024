@@ -12,7 +12,6 @@ class OnboardingScreen1 extends StatelessWidget {
       required this.title,
       required this.subtitle});
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,7 +20,7 @@ class OnboardingScreen1 extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-             Image.asset(imagePath),// Asegúrate de tener tus imágenes en assets
+            Image.asset(imagePath), // Asegúrate de tener tus imágenes en assets
             const SizedBox(height: 20),
             Text(title,
                 style: GoogleFonts.poppins(

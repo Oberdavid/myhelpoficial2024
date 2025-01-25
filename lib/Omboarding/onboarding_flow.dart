@@ -80,7 +80,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
                   // Si es la última página, guarda el estado y redirige
                   await _completeOnboarding();
                   if (context.mounted) {
-                    context.go('/'); // Redirige a la pantalla principal
+                    context.go('/entrada'); // Redirige a la pantalla entrada
                   }
                 } else {
                   // Si no es la última página, avanza a la siguiente

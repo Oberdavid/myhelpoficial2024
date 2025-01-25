@@ -18,10 +18,14 @@ class Shake {
 
   PhoneShakeCallback? _onShake;
 
+  final double _shakeThresholdGravity = 2.7 * 1.8;
   // Reducir el umbral de detección para mayor sensibilidad
   final double _shakeThresholdGravity =
       1.5 * 1.6; // Ajustado para mayor sensibilidad
   // Mínimo de sacudidas necesarias dentro del tiempo permitido
+  final int _minimumShakeCount = 2;
+  // Tiempo mínimo entre sacudidas
+  final int _shakeSlopTimeMS = 1000;
   final int _minimumShakeCount = 3;
   // Reducir el tiempo mínimo entre sacudidas para mayor sensibilidad
   final int _shakeSlopTimeMS = 500; // Ajustado para mayor sensibilidad
