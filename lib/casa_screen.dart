@@ -379,9 +379,9 @@ class _CasaScreenState extends State<CasaScreen> {
                 _buildOptionCard(
                     context, 'Avisar a la policía', 'assets/policia.png', ''),
                 _buildOptionCard(context, 'Enviar Novedad',
-                    'assets/notificacion.png', '/novedadesscreen'),
+                    'assets/notificacion.png', '/novedades'),
                 _buildOptionCard(context, 'Extraviados',
-                    'assets/desaparecido.png', '/desaparecidosscreen'),
+                    'assets/desaparecido.png', '/desaparecidos'),
                 _buildOptionCard(
                     context, 'Presencia Policial', 'assets/presencia.png', ''),
                 _buildOptionCard(
