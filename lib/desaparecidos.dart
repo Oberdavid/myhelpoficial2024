@@ -2,38 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 // import 'package:google_maps_flutter/google_maps_flutter.dart';
 // import 'package:location/location.dart';
-// import 'package:oficial_app/detalles_desaparecidos.dart';
-
-// void main() => runApp(MyApp());
-
-// class MyApp extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return MaterialApp.router(
-//       routerConfig: _router,
-//       debugShowCheckedModeBanner: false,
-//     );
-//   }
-// }
-
-// final GoRouter _router = GoRouter(
-//   initialLocation: '/desaparecidosscreen',
-//   routes: [
-//     GoRoute(
-//       path: '/desaparecidosscreen',
-//       builder: (context, state) => DesaparecidosScreen(),
-//     ),
-//     GoRoute(
-//       path: '/details/:type/:index',
-//       builder: (context, state) {
-//         final type = state.pathParameters['type']!;
-//         final index = int.parse(state.pathParameters['index']!);
-//         return DetallesDesaparecidoScreen(type: type, index: index);
-//       },
-//     ),
-//     // Agrega más rutas según sea necesario
-//   ],
-// );
 
 class DesaparecidosScreen extends StatefulWidget {
   const DesaparecidosScreen({super.key});
