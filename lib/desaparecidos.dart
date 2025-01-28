@@ -94,7 +94,7 @@ class _DesaparecidosScreenState extends State<DesaparecidosScreen> {
         ),
         leading: IconButton(
           onPressed: () {
-            context.go('/casascreen');
+            context.pop();
           },
           icon: const Icon(Icons.arrow_back),
           color: Colors.white,
