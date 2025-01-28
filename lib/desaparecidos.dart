@@ -166,9 +166,12 @@ class _DesaparecidosScreenState extends State<DesaparecidosScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset('assets/desaparecido_$index.png', height: 100),
+              // Image.asset('assets/desaparecido_$index.png', height: 100),
+              // const SizedBox(height: 10),
+              // Text('Desaparecido $index'),
+              Image.asset('assets/desaparecido.png', height: 50),
               const SizedBox(height: 10),
-              Text('Desaparecido $index'),
+              Text('Desaparecido'),
             ],
           ),
         ),
