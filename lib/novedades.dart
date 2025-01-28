@@ -3,23 +3,16 @@ import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 
-// void main() => runApp(MyApp());
-
-// class MyApp extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return const MaterialApp();
-//   }
-// }
-
 class NovedadesScreen extends StatefulWidget {
+  const NovedadesScreen({super.key});
+
   @override
-  _NovedadesScreenState createState() => _NovedadesScreenState();
+  State<NovedadesScreen> createState() => _NovedadesScreenState();
 }
 
 class _NovedadesScreenState extends State<NovedadesScreen> {
-  TextEditingController _fechaController = TextEditingController();
-  TextEditingController _horaController = TextEditingController();
+  final TextEditingController _fechaController = TextEditingController();
+  final TextEditingController _horaController = TextEditingController();
   LatLng? _selectedLocation;
   GoogleMapController? _mapController;
   String _selectedNovedad = ''; // Asigna un valor inicial
