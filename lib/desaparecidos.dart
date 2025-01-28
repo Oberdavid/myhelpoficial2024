@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:location/location.dart';
+// import 'package:google_maps_flutter/google_maps_flutter.dart';
+// import 'package:location/location.dart';
 // import 'package:oficial_app/detalles_desaparecidos.dart';
 
 // void main() => runApp(MyApp());
@@ -36,13 +36,15 @@ import 'package:location/location.dart';
 // );
 
 class DesaparecidosScreen extends StatefulWidget {
+  const DesaparecidosScreen({super.key});
+
   @override
-  _DesaparecidosScreenState createState() => _DesaparecidosScreenState();
+  State<DesaparecidosScreen> createState() => _DesaparecidosScreenState();
 }
 
 class _DesaparecidosScreenState extends State<DesaparecidosScreen> {
-  LatLng? _selectedLocation;
-  GoogleMapController? _mapController;
+  // LatLng? _selectedLocation;
+  // GoogleMapController? _mapController;
   String _selectedCategory = '';
 
   @override
@@ -52,12 +54,12 @@ class _DesaparecidosScreenState extends State<DesaparecidosScreen> {
   }
 
   Future<void> _getCurrentLocation() async {
-    final location = Location();
-    final currentLocation = await location.getLocation();
-    setState(() {
-      _selectedLocation =
-          LatLng(currentLocation.latitude!, currentLocation.longitude!);
-    });
+    // final location = Location();
+    // final currentLocation = await location.getLocation();
+    // setState(() {
+    //   _selectedLocation =
+    //       LatLng(currentLocation.latitude!, currentLocation.longitude!);
+    // });
   }
 
   void _goToReportar() {
