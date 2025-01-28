@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:oficial_app/detalles_desaparecidos.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // Importa SharedPreferences
 import 'package:oficial_app/B_Navigator/IndexedStackNavigation.dart';
 import 'package:oficial_app/desaparecidos.dart';
@@ -133,6 +134,14 @@ class MyApp extends StatelessWidget {
         GoRoute(
           path: '/consejosseguridad',
           builder: (context, state) => SafetyTipsScreen(),
+        ),
+        GoRoute(
+          path: '/details/:type/:index',
+          builder: (context, state) {
+            final type = state.pathParameters['type']!;
+            final index = int.parse(state.pathParameters['index']!);
+            return DetallesDesaparecidoScreen(type: type, index: index);
+          },
         ),
         // Agrega más rutas según sea necesario
       ],
