@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import '../servicios/speech_service.dart';
-import '../servicios/location_service.dart';
-import '../servicios/alert_service.dart';
+import '../Servicios/speech_service.dart';
+import '../Servicios/location_service.dart';
+import '../Servicios/alert_service.dart';
 
 class EmergencyScreen extends StatefulWidget {
   const EmergencyScreen({super.key});
@@ -39,7 +39,8 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
 
   void _sendAlert() async {
     Position position = await _locationService.getCurrentLocation();
-    String message = "¡Necesito ayuda! Mi ubicación es: https://maps.google.com/?q=${position.latitude},${position.longitude}";
+    String message =
+        "¡Necesito ayuda! Mi ubicación es: https://maps.google.com/?q=${position.latitude},${position.longitude}";
     String phoneNumber = "123456789"; // Número de emergencia
     await _alertService.sendAlert(phoneNumber, message);
   }
@@ -51,7 +52,8 @@ class _EmergencyScreenState extends State<EmergencyScreen> {
         title: const Text('Modo de Emergencia'),
       ),
       body: Center(
-        child: Text(isListening ? "Escuchando..." : "Error: No se puede escuchar"),
+        child:
+            Text(isListening ? "Escuchando..." : "Error: No se puede escuchar"),
       ),
     );
   }
