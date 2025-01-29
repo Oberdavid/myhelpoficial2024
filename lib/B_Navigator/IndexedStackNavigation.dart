@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:oficial_app/casa_screen.dart';
-import 'package:oficial_app/comentarios.dart';
-import 'package:oficial_app/notificaciones.dart';
-import 'package:oficial_app/ubicacion.dart';
+import 'package:oficial_app/Screen/casa_screen.dart';
+import 'package:oficial_app/Screen/comentarios.dart';
+import 'package:oficial_app/Screen/notificaciones.dart';
+import 'package:oficial_app/Screen/ubicacion.dart';
 
 class IndexedStackNavigation extends StatefulWidget {
-  const IndexedStackNavigation({super.key});
+  const IndexedStackNavigation({super.key, required Widget child});
 
   @override
   State<IndexedStackNavigation> createState() => _IndexedStackNavigationState();

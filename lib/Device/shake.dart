@@ -18,11 +18,14 @@ class Shake {
 
   PhoneShakeCallback? _onShake;
 
-  final double _shakeThresholdGravity = 2.7 * 1.8;
+  final double _shakeThresholdGravity =
+      1.5 * 1.6; // Ajustado para mayor sensibilidad
   // Mínimo de sacudidas necesarias dentro del tiempo permitido
   final int _minimumShakeCount = 2;
   // Tiempo mínimo entre sacudidas
-  final int _shakeSlopTimeMS = 1000;
+
+  // Reducir el tiempo mínimo entre sacudidas para mayor sensibilidad
+  final int _shakeSlopTimeMS = 500; // Ajustado para mayor sensibilidad
 
   int _mShakeTimestamp = DateTime.now().millisecondsSinceEpoch;
 
@@ -30,7 +33,7 @@ class Shake {
 
   StreamSubscription? _streamSubscription;
   // Tiempo total permitido para detectar las sacudidas
-  final int _totalTimeForShakes = 3000;
+  final int _totalTimeForShakes = 4000;
 
   int _startTime = 0;
 
@@ -64,7 +67,7 @@ class Shake {
         double gForce = sqrt(gX * gX + gY * gY + gZ * gZ);
 
         if (gForce > _shakeThresholdGravity) {
-          // ignore shake events too close to each other (500ms)
+          // Ignorar sacudidas demasiado cercanas en el tiempo
           if (_mShakeTimestamp + _shakeSlopTimeMS > now) {
             return;
           }

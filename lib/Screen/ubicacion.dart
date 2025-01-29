@@ -15,6 +15,7 @@ class _ubicacionState extends State<Ubicacion> {
   late GoogleMapController _mapController;
   LatLng _initialPosition = const LatLng(4.2977429, -74.8075868);
   LatLng _currentPosition = const LatLng(4.2977429, -74.8075868);
+  Set<Marker> _markers = {}; // Conjunto de marcadores
 
   void _onMapCreated(GoogleMapController controller) {
     _mapController = controller;
@@ -26,6 +27,14 @@ class _ubicacionState extends State<Ubicacion> {
     setState(() {
       _currentPosition =
           LatLng(locationData.latitude!, locationData.longitude!);
+      // Actualiza el marcador con la nueva posición
+      _markers = {
+        Marker(
+          markerId: const MarkerId('current_location'),
+          position: _currentPosition,
+          infoWindow: const InfoWindow(title: 'Estás aquí'),
+        ),
+      };
     });
     _mapController.animateCamera(
       CameraUpdate.newLatLng(_currentPosition),
@@ -63,7 +72,8 @@ class _ubicacionState extends State<Ubicacion> {
               target: _initialPosition,
               zoom: 15,
             ),
-            myLocationEnabled: true,
+            myLocationEnabled: true, // Muestra el botón de "mi ubicación"
+            markers: _markers, // Agrega los marcadores al mapa
           ),
           Positioned(
             bottom: 50,

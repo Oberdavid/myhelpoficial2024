@@ -87,7 +87,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ElevatedButton(
                 onPressed: () {
                   // Redirige a la ruta principal (/) después de iniciar sesión
-                  context.go('/');
+                  context.go('/casascreen');
                 },
                 style: ElevatedButton.styleFrom(
                   minimumSize: const Size(double.infinity, 50),

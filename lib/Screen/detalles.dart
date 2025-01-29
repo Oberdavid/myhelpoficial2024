@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class DetallesDesaparecidoScreen extends StatelessWidget {
+class DetallesScreen extends StatelessWidget {
   final String type;
   final int index;
 
-  const DetallesDesaparecidoScreen({super.key, required this.type, required this.index});
+  const DetallesScreen(
+      {super.key,
+      required this.type,
+      required this.index,
+      required String reporteId});
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +41,7 @@ class DetallesDesaparecidoScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Detalles de $type $index',              
+              'Detalles de $type $index',
               style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 20),

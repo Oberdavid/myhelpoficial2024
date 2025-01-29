@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:oficial_app/omboarding1.dart';
-import 'package:oficial_app/omboarding2.dart';
-import 'package:oficial_app/omboarding3.dart';
+import 'package:oficial_app/Omboarding/omboarding1.dart';
+import 'package:oficial_app/Omboarding/omboarding2.dart';
+import 'package:oficial_app/Omboarding/omboarding3.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // Importa SharedPreferences
-import 'onboarding_screen.dart'; // Asegúrate de importar tu pantalla de onboarding
+
+// Asegúrate de importar tu pantalla de onboarding
 
 class OnboardingFlow extends StatefulWidget {
   const OnboardingFlow({super.key});
