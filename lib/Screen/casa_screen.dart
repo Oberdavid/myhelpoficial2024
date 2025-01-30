@@ -426,7 +426,7 @@ class _CasaScreenState extends State<CasaScreen> {
   void _handleOptionTap(BuildContext context, String title, String route) {
     if (route.isNotEmpty) {
       // Usa GoRouter para navegar
-      context.go(route);
+      context.push(route);
     } else {
       // Muestra un diálogo de confirmación antes de enviar la alerta
       showDialog(
