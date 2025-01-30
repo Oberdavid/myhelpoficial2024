@@ -99,17 +99,19 @@ class _DesaparecidosScreenState extends State<DesaparecidosScreen> {
 
   Widget _buildReporteCard(int index) {
     return GestureDetector(
-      onTap: () => context.go('/desaparecidos/detalles/$index'),
+      onTap: () => context.go('/desaparecidos/details/$index'),
       child: Card(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Expanded(
-              child: Image.asset(
-                'assets/placeholder.jpg',
-                fit: BoxFit.cover,
-              ),
-            ),
+            // LA IMAGEN NO EXISTE
+            // SizedBox(
+            //   height: 150,
+            //   child: Image.asset(
+            //     'assets/placeholder.jpg',
+            //     fit: BoxFit.cover,
+            //   ),
+            // ),
             const Padding(
               padding: EdgeInsets.all(8),
               child: Column(
