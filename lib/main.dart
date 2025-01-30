@@ -106,6 +106,29 @@ class MyApp extends StatelessWidget {
         path: '/forgotpasswordscreen',
         builder: (context, state) => const ForgotPasswordScreen(),
       ),
+      GoRoute(
+        path: '/novedades',
+        builder: (context, state) => const NovedadesScreen(),
+      ),
+      // Módulo de desaparecidos
+      GoRoute(
+        path: '/desaparecidos',
+        builder: (context, state) => DesaparecidosScreen(),
+        routes: [
+          GoRoute(
+            path: '/reportar',
+            builder: (context, state) => reportar.ReportarExtravioScreen(),
+          ),
+          GoRoute(
+            path: 'details/:id',
+            builder: (context, state) => DetallesScreen(
+              reporteId: state.pathParameters['id']!,
+              type: 'default', // Add appropriate type value
+              index: 0, // Add appropriate index value
+            ),
+          ),
+        ],
+      ),
 
       // Ruta principal anidada
       ShellRoute(
@@ -137,7 +160,6 @@ class MyApp extends StatelessWidget {
               ),
             ],
           ),
-
           // Configuraciones y otras pantallas
           GoRoute(
             path: '/cambiarcontrasena',
@@ -159,10 +181,7 @@ class MyApp extends StatelessWidget {
             path: '/midispositivo',
             builder: (context, state) => const MyTeamScreen(),
           ),
-          GoRoute(
-            path: '/novedades',
-            builder: (context, state) => NovedadesScreen(),
-          ),
+
           GoRoute(
             path: '/quienessomos',
             builder: (context, state) => QuienesSomosScreen(),
