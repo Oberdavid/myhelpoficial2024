@@ -3,14 +3,14 @@ import 'package:go_router/go_router.dart';
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
 
-void main() => runApp(MyApp());
+// void main() => runApp(MyApp());
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return const MaterialApp();
-  }
-}
+// class MyApp extends StatelessWidget {
+//   @override
+//   Widget build(BuildContext context) {
+//     return const MaterialApp();
+//   }
+// }
 
 class ReportarExtravioScreen extends StatefulWidget {
   @override
