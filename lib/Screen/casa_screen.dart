@@ -399,9 +399,9 @@ class _CasaScreenState extends State<CasaScreen> {
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               crossAxisCount: 2,
-              childAspectRatio: 1.9,
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 16,
+              childAspectRatio: 2.0,
+              crossAxisSpacing: 11,
+              mainAxisSpacing: 11,
               children: <Widget>[
                 _buildOptionCard(
                     context, 'Ayuda Cercana', 'assets/ayuda.png', ''),
@@ -475,8 +475,8 @@ class _CasaScreenState extends State<CasaScreen> {
               BoxShadow(
                 color: Colors.blue.withOpacity(0.2),
                 blurRadius: 10,
-                spreadRadius: 5,
-                offset: const Offset(0, 9),
+                spreadRadius: 4,
+                offset: const Offset(0, 3),
               ),
             ],
           ),
