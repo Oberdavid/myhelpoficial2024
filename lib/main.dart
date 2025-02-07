@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:oficial_app/Screen/cambiar_plan.dart';
+import 'package:oficial_app/Screen/publicacion.dart';
+import 'package:oficial_app/Screen/zonapeligrosamaps.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // Importa SharedPreferences
 import 'package:permission_handler/permission_handler.dart';
 
@@ -9,7 +11,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:oficial_app/B_Navigator/IndexedStackNavigation.dart';
 import 'package:oficial_app/Screen/casa_screen.dart';
 import 'package:oficial_app/Screen/desaparecidos.dart';
-import 'package:oficial_app/Screen/reportar_extravios.dart' as reportar;
+import 'package:oficial_app/Screen/publicacion.dart' as reportar;
 import 'package:oficial_app/Screen/detalles.dart';
 import 'package:oficial_app/Screen/novedades.dart';
 import 'package:oficial_app/Screen/cambiar_contraseña.dart';
@@ -27,9 +29,17 @@ import 'package:oficial_app/Screen/agregar_contactos.dart';
 import 'package:oficial_app/Screen/consejos_seguridad.dart';
 import 'package:oficial_app/Screen/mi_dispositivo.dart';
 import 'package:oficial_app/Screen/emergencia.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Inicializar Firebase
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   // Solicitar permisos
   await requestPermissions();
@@ -100,7 +110,7 @@ class MyApp extends StatelessWidget {
       ),
       GoRoute(
         path: '/registerscreen',
-        builder: (context, state) => const RegisterScreen(),
+        builder: (context, state) => RegistroScreen(),
       ),
       GoRoute(
         path: '/forgotpasswordscreen',
@@ -115,10 +125,6 @@ class MyApp extends StatelessWidget {
         path: '/desaparecidos',
         builder: (context, state) => DesaparecidosScreen(),
         routes: [
-          GoRoute(
-            path: '/reportar',
-            builder: (context, state) => reportar.ReportarExtravioScreen(),
-          ),
           GoRoute(
             path: 'details/:id',
             builder: (context, state) => DetallesScreen(
@@ -141,25 +147,6 @@ class MyApp extends StatelessWidget {
             builder: (context, state) => const CasaScreen(),
           ),
 
-          // Módulo de desaparecidos
-          GoRoute(
-            path: '/desaparecidos',
-            builder: (context, state) => DesaparecidosScreen(),
-            routes: [
-              GoRoute(
-                path: 'reportar',
-                builder: (context, state) => reportar.ReportarExtravioScreen(),
-              ),
-              GoRoute(
-                path: 'details/:id',
-                builder: (context, state) => DetallesScreen(
-                  reporteId: state.pathParameters['id']!,
-                  type: 'default', // Add appropriate type value
-                  index: 0, // Add appropriate index value
-                ),
-              ),
-            ],
-          ),
           // Configuraciones y otras pantallas
           GoRoute(
             path: '/cambiarcontrasena',
@@ -203,8 +190,16 @@ class MyApp extends StatelessWidget {
             builder: (context, state) => SafetyTipsScreen(),
           ),
           GoRoute(
+            path: '/publicacion',
+            builder: (context, state) => const PublicacionScreen(),
+          ),
+          GoRoute(
             path: '/emergencia',
             builder: (context, state) => EmergencyScreen(),
+          ),
+          GoRoute(
+            path: '/zonapeligrosa',
+            builder: (context, state) => DangerZonesMap(),
           ),
         ],
       ),

@@ -64,9 +64,9 @@ class _NavDrawerState extends State<NavDrawer> {
                 ),
                 // Botón de emergencia (nuevo)
                 ListTile(
-                  leading: const Icon(Icons.warning, color: Colors.red),
+                  leading: const Icon(Icons.security, color: Colors.red),
                   title: Text(
-                    'Modo de Emergencia',
+                    'Modo Seguro',
                     style: GoogleFonts.poppins(
                       textStyle: const TextStyle(
                         fontSize: 16,
@@ -84,7 +84,7 @@ class _NavDrawerState extends State<NavDrawer> {
                   context.go('/casascreen');
                 }),
                 buildDrawerItem(Icons.edit, 'Editar Perfil', () {
-                  context.go('/editarPerfil');
+                  context.go('/editarperfil');
                 }),
                 buildDrawerItem(Icons.lock, 'Cambiar Contraseña', () {
                   context.go('/cambiarcontrasena');
@@ -94,7 +94,7 @@ class _NavDrawerState extends State<NavDrawer> {
                   context.go('/cambiarplan');
                 }),
                 buildDrawerItem(Icons.security, 'Consejos de Seguridad', () {
-                  context.go('/consejosdeseguridad');
+                  context.go('/consejosseguridad');
                 }),
                 buildDrawerItem(Icons.person, 'Agregar Contactos', () {
                   context.go('/agregarcontactos');

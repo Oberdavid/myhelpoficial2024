@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:oficial_app/Screen/casa_screen.dart';
-import 'package:oficial_app/Screen/comentarios.dart';
 import 'package:oficial_app/Screen/notificaciones.dart';
 import 'package:oficial_app/Screen/ubicacion.dart';
+import 'package:oficial_app/Screen/zonapeligrosamaps.dart';
 
 class IndexedStackNavigation extends StatefulWidget {
   const IndexedStackNavigation({super.key, required Widget child});
@@ -14,11 +14,11 @@ class IndexedStackNavigation extends StatefulWidget {
 class _IndexedStackNavigationState extends State<IndexedStackNavigation> {
   int _selectedIndex = 0;
 
-  final List<Widget> _pages = const [
-    CasaScreen(),
-    Ubicacion(),
-    Notificaciones(),
-    Comentarios(),
+  final List<Widget> _pages = [
+    const CasaScreen(),
+    const Ubicacion(),
+    const Notificaciones(),
+    DangerZonesMap(),
   ];
 
   void _onItemTapped(int index) {
@@ -55,9 +55,9 @@ class _IndexedStackNavigationState extends State<IndexedStackNavigation> {
             label: 'Notificaciones',
           ),
           NavigationDestination(
-            selectedIcon: Icon(Icons.feedback),
-            icon: Icon(Icons.feedback_outlined),
-            label: 'Comentarios',
+            selectedIcon: Icon(Icons.dangerous),
+            icon: Icon(Icons.dangerous_outlined),
+            label: 'Zona peligrosa',
           ),
         ],
       ),

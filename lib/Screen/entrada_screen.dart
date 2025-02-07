@@ -35,9 +35,9 @@ class EntradaScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 5), // Reducido el espacio
                 const Text(
-                  'Los buenos somos más',
+                  'Mejor es alguien cerca que un familiar lejos',
                   style: TextStyle(
-                    fontSize: 28,
+                    fontSize: 25,
                     color: Colors.blue,
                   ),
                   textAlign: TextAlign.center,

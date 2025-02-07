@@ -53,7 +53,7 @@ class _DesaparecidosScreenState extends State<DesaparecidosScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => context.go('/reportar'),
+        onPressed: () => context.go('/publicacion'),
         child: const Icon(Icons.add),
       ),
       body: Column(

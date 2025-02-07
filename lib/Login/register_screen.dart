@@ -1,242 +1,206 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:go_router/go_router.dart'; // Importa GoRouter
 
-class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({super.key});
+class RegistroScreen extends StatefulWidget {
+  const RegistroScreen({Key? key}) : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
-  _RegisterScreenState createState() => _RegisterScreenState();
+  _RegistroScreenState createState() => _RegistroScreenState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class _RegistroScreenState extends State<RegistroScreen> {
   final _formKey = GlobalKey<FormState>();
-  String? _idType;
-  String? _gender;
-  bool _acceptTerms = false;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
+  final TextEditingController _nombreUsuarioController =
+      TextEditingController(); // Nuevo campo: nombre de usuario
+
+  bool _isLoading = false;
+  String? _errorMessage;
+
+  // Método para registrar usuario
+  Future<void> _registrarUsuario() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      // 1. Registrar usuario en Firebase Auth
+      UserCredential userCredential =
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text.trim(),
+      );
+
+      // 2. Guardar datos adicionales en Firestore
+      await FirebaseFirestore.instance
+          .collection('Usuarios')
+          .doc(userCredential.user!.uid) // Usar el UID como ID del documento
+          .set({
+        'nombreUsuario': _nombreUsuarioController.text.trim(), // Nuevo campo
+        'email': _emailController.text.trim(),
+        'fechaIngreso': Timestamp.now(), // Fecha de registro automática
+      });
+
+      // 3. Navegar a la pantalla de inicio usando GoRouter
+      if (mounted) {
+        context.go('/casascreen'); // Usa GoRouter para navegar
+      }
+    } on FirebaseAuthException catch (e) {
+      setState(() {
+        _errorMessage = _traducirError(e.code);
+      });
+    } catch (e) {
+      setState(() {
+        _errorMessage = "Error inesperado: $e";
+      });
+    } finally {
+      if (mounted) {
+        setState(() => _isLoading = false);
+      }
+    }
+  }
+
+  // Traducir códigos de error de Firebase
+  String _traducirError(String errorCode) {
+    switch (errorCode) {
+      case 'weak-password':
+        return 'La contraseña es demasiado débil.';
+      case 'email-already-in-use':
+        return 'Este correo ya está registrado.';
+      case 'invalid-email':
+        return 'Correo electrónico inválido.';
+      default:
+        return 'Error al registrar. Intenta nuevamente.';
+    }
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    _confirmPasswordController.dispose();
+    _nombreUsuarioController.dispose(); // Dispose del nuevo controlador
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          'Crear Cuenta',
-          style: TextStyle(color: Colors.white, fontSize: 28),
-        ),
-        centerTitle: true,
-        backgroundColor: Colors.blue,
-        shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(25),
-          bottomRight: Radius.circular(25),
-        )),
-        leading: IconButton(
-          onPressed: () {
-            context.go('/entrada');
-          },
-          icon: const Icon(Icons.arrow_back),
-          color: Colors.white,
-        ),
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
+      appBar: AppBar(title: const Text('Registro')),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                // Campo de nombre de usuario
                 TextFormField(
+                  controller: _nombreUsuarioController,
                   decoration: const InputDecoration(
-                    labelText: 'Nombre Completo*',
-                    border: OutlineInputBorder(),
+                    labelText: 'Nombre de usuario',
+                    prefixIcon: Icon(Icons.person),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Por favor ingrese su nombre';
+                      return 'Ingresa tu nombre de usuario';
                     }
                     return null;
                   },
                 ),
-                const SizedBox(height: 16),
-                DropdownButtonFormField<String>(
-                  decoration: const InputDecoration(
-                    labelText: 'Tipo de Identificación*',
-                    border: OutlineInputBorder(),
-                  ),
-                  value: _idType,
-                  items: const [
-                    DropdownMenuItem(
-                        value: 'cc', child: Text('Cédula de Ciudadanía')),
-                    DropdownMenuItem(
-                        value: 'ce', child: Text('Cédula de Extranjería')),
-                    DropdownMenuItem(
-                        value: 'pasaporte', child: Text('Pasaporte')),
-                    DropdownMenuItem(
-                        value: 'ti', child: Text('Tarjeta de Identidad')),
-                  ],
-                  onChanged: (value) {
-                    setState(() {
-                      _idType = value;
-                    });
-                  },
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor seleccione un tipo de identificación';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 20),
+
+                // Campo de correo electrónico
                 TextFormField(
+                  controller: _emailController,
                   decoration: const InputDecoration(
-                    labelText: 'Número de Identificación*',
-                    border: OutlineInputBorder(),
+                    labelText: 'Correo electrónico',
+                    prefixIcon: Icon(Icons.email),
                   ),
+                  keyboardType: TextInputType.emailAddress,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Por favor ingrese su número de identificación';
+                      return 'Ingresa tu correo';
+                    }
+                    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                        .hasMatch(value)) {
+                      return 'Correo inválido';
                     }
                     return null;
                   },
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 20),
+
+                // Campo de contraseña
                 TextFormField(
+                  controller: _passwordController,
                   decoration: const InputDecoration(
-                    labelText: 'Fecha de Nacimiento*',
-                    border: OutlineInputBorder(),
-                    hintText: 'DD/MM/AAAA',
+                    labelText: 'Contraseña',
+                    prefixIcon: Icon(Icons.lock),
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor ingrese su fecha de nacimiento';
-                    }
-                    // Aquí podrías agregar una validación más compleja para el formato de la fecha
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 16),
-                DropdownButtonFormField<String>(
-                  decoration: const InputDecoration(
-                    labelText: 'Género*',
-                    border: OutlineInputBorder(),
-                  ),
-                  value: _gender,
-                  items: const [
-                    DropdownMenuItem(
-                        value: 'masculino', child: Text('Masculino')),
-                    DropdownMenuItem(
-                        value: 'femenino', child: Text('Femenino')),
-                    DropdownMenuItem(value: 'otro', child: Text('Otro')),
-                    DropdownMenuItem(
-                        value: 'prefiero_no_decir',
-                        child: Text('Prefiero no decir')),
-                  ],
-                  onChanged: (value) {
-                    setState(() {
-                      _gender = value;
-                    });
-                  },
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor seleccione un género';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  decoration: const InputDecoration(
-                    labelText: 'Correo Electrónico*',
-                    border: OutlineInputBorder(),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor ingrese su correo electrónico';
-                    }
-                    if (!value.contains('@')) {
-                      return 'Por favor ingrese un correo electrónico válido';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  decoration: const InputDecoration(
-                    labelText: 'Número de Teléfono*',
-                    border: OutlineInputBorder(),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor ingrese su número de teléfono';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 16),
-                TextFormField(
                   obscureText: true,
-                  decoration: const InputDecoration(
-                    labelText: 'Contraseña*',
-                    border: OutlineInputBorder(),
-                  ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Por favor ingrese una contraseña';
+                      return 'Ingresa una contraseña';
                     }
-                    if (value.length < 8) {
-                      return 'La contraseña debe tener al menos 8 caracteres';
+                    if (value.length < 6) {
+                      return 'Mínimo 6 caracteres';
                     }
                     return null;
                   },
                 ),
-                const SizedBox(height: 16),
+                const SizedBox(height: 20),
+
+                // Confirmar contraseña
                 TextFormField(
-                  obscureText: true,
+                  controller: _confirmPasswordController,
                   decoration: const InputDecoration(
-                    labelText: 'Confirmar Contraseña*',
-                    border: OutlineInputBorder(),
+                    labelText: 'Confirmar contraseña',
+                    prefixIcon: Icon(Icons.lock_outline),
                   ),
+                  obscureText: true,
                   validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Por favor confirme su contraseña';
+                    if (value != _passwordController.text) {
+                      return 'Las contraseñas no coinciden';
                     }
-                    // Aquí deberías comparar con la contraseña original
                     return null;
                   },
                 ),
-                const SizedBox(height: 16),
-                CheckboxListTile(
-                  title: const Text('Acepto los términos y condiciones*'),
-                  value: _acceptTerms,
-                  onChanged: (bool? value) {
-                    setState(() {
-                      _acceptTerms = value!;
-                    });
-                  },
-                ),
-                const SizedBox(height: 24),
-                ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate() && _acceptTerms) {
-                      // Procesar el registro
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Procesando registro...')),
-                      );
-                    } else if (!_acceptTerms) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                            content: Text(
-                                'Debes aceptar los términos y condiciones')),
-                      );
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size(double.infinity, 50),
-                    backgroundColor: Colors.blue,
+                const SizedBox(height: 30),
+
+                // Mensaje de error
+                if (_errorMessage != null)
+                  Text(
+                    _errorMessage!,
+                    style: TextStyle(color: Colors.red, fontSize: 16),
                   ),
-                  child: const Text('Registrarse',
-                      style: TextStyle(fontSize: 24, color: Colors.white)),
+                const SizedBox(height: 20),
+
+                // Botón de registro
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: _isLoading ? null : _registrarUsuario,
+                    child: _isLoading
+                        ? const CircularProgressIndicator(color: Colors.white)
+                        : const Text('Registrarse',
+                            style: TextStyle(fontSize: 18)),
+                  ),
+                ),
+
+                // Enlace para iniciar sesión
+                TextButton(
+                  onPressed: () =>
+                      context.go('/login'), // Usa GoRouter para navegar
+                  child: const Text('¿Ya tienes cuenta? Inicia sesión'),
                 ),
               ],
             ),

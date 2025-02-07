@@ -103,7 +103,7 @@ class _CasaScreenState extends State<CasaScreen> {
                 child: Text(
                   _isEmergencyModeActive
                       ? 'Emergencia Activada'
-                      : 'Activar Emergencia',
+                      : 'Modo Seguro',
                   style: const TextStyle(fontSize: 16, color: Colors.white),
                 ),
               ),
