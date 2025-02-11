@@ -51,7 +51,7 @@ class _EditarPerfilScreenState extends State<EditarPerfilScreen> {
               ),
               color: Colors.white,
               onPressed: () {
-                context.go('/casa');
+                context.go('/casascreen');
               },
             ),
           ),
