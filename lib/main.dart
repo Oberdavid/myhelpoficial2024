@@ -136,6 +136,60 @@ class MyApp extends StatelessWidget {
         ],
       ),
 
+      GoRoute(
+        path: '/cambiarcontrasena',
+        builder: (context, state) => const ChangePasswordScreen(),
+      ),
+      GoRoute(
+        path: '/editarperfil',
+        builder: (context, state) => const EditarPerfilScreen(),
+      ),
+      GoRoute(
+        path: '/cambiarplan',
+        builder: (context, state) => const ChangePlanScreen(),
+      ),
+      GoRoute(
+        path: '/agregarcontactos',
+        builder: (context, state) => const AddContactScreen(),
+      ),
+      GoRoute(
+        path: '/midispositivo',
+        builder: (context, state) => const MyTeamScreen(),
+      ),
+
+      GoRoute(
+        path: '/quienessomos',
+        builder: (context, state) => QuienesSomosScreen(),
+      ),
+      GoRoute(
+        path: '/comofunciona',
+        builder: (context, state) => ComoFuncionaAppScreen(),
+      ),
+      GoRoute(
+        path: '/contactanos',
+        builder: (context, state) => ContactanosScreen(),
+      ),
+      GoRoute(
+        path: '/politicasprivacidad',
+        builder: (context, state) => const PrivacyPolicyScreen(),
+      ),
+      GoRoute(
+        path: '/consejosseguridad',
+        builder: (context, state) => SafetyTipsScreen(),
+      ),
+      GoRoute(
+        path: '/publicacion',
+        builder: (context, state) => const PublicacionScreen(),
+      ),
+      GoRoute(
+        path: '/emergencia',
+        builder: (context, state) => EmergencyScreen(),
+      ),
+      GoRoute(
+        path: '/zonapeligrosa',
+        builder: (context, state) => DangerZonesMap(),
+      ),
+
       // Ruta principal anidada
       ShellRoute(
         builder: (context, state, child) =>
@@ -148,59 +202,6 @@ class MyApp extends StatelessWidget {
           ),
 
           // Configuraciones y otras pantallas
-          GoRoute(
-            path: '/cambiarcontrasena',
-            builder: (context, state) => const ChangePasswordScreen(),
-          ),
-          GoRoute(
-            path: '/editarperfil',
-            builder: (context, state) => const EditarPerfilScreen(),
-          ),
-          GoRoute(
-            path: '/cambiarplan',
-            builder: (context, state) => const ChangePlanScreen(),
-          ),
-          GoRoute(
-            path: '/agregarcontactos',
-            builder: (context, state) => const AddContactScreen(),
-          ),
-          GoRoute(
-            path: '/midispositivo',
-            builder: (context, state) => const MyTeamScreen(),
-          ),
-
-          GoRoute(
-            path: '/quienessomos',
-            builder: (context, state) => QuienesSomosScreen(),
-          ),
-          GoRoute(
-            path: '/comofunciona',
-            builder: (context, state) => ComoFuncionaAppScreen(),
-          ),
-          GoRoute(
-            path: '/contactanos',
-            builder: (context, state) => ContactanosScreen(),
-          ),
-          GoRoute(
-            path: '/politicasprivacidad',
-            builder: (context, state) => const PrivacyPolicyScreen(),
-          ),
-          GoRoute(
-            path: '/consejosseguridad',
-            builder: (context, state) => SafetyTipsScreen(),
-          ),
-          GoRoute(
-            path: '/publicacion',
-            builder: (context, state) => const PublicacionScreen(),
-          ),
-          GoRoute(
-            path: '/emergencia',
-            builder: (context, state) => EmergencyScreen(),
-          ),
-          GoRoute(
-            path: '/zonapeligrosa',
-            builder: (context, state) => DangerZonesMap(),
-          ),
         ],
       ),
     ],
