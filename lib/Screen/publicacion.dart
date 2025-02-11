@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../servicios/firestore_service.dart';
+import '../Servicios/firestore_service.dart';
 import '../modelos/publicacion_model.dart';
 
 class PublicacionScreen extends StatefulWidget {
